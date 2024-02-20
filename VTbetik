@@ -1,0 +1,38 @@
+
+CREATE TABLE Kullanıcı (
+    Kullanıcı_Adı TEXT NOT NULL,
+    E_Posta TEXT NOT NULL,
+    Parola TEXT NOT NULL,
+    Tür TEXT NOT NULL,
+    Kimlik TEXT NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE Oturum (
+    Kullanıcı TEXT NOT NULL,
+    Kimlik TEXT NOT NULL,
+    Başlangıç TEXT NOT NULL,
+    Bitiş TEXT NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE Bilgi_Doğrulama (
+    Kimlik TEXT NOT NULL,
+    Kullanıcı TEXT NOT NULL,
+    Başlangıç TEXT NOT NULL,
+    Bitiş TEXT NOT NULL,
+    Bağlantı TEXT NOT NULL,
+    Doğrulandı BOOLEAN NOT NULL DEFAULT FALSE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE Harita (
+    EnlemDrc DOUBLE NOT NULL,
+    BoylamDrc DOUBLE NOT NULL,
+    Mevcut_İsim TEXT,
+    Düzenlenmiş_İsim TEXT NOT NULL,
+    Üst_Bölge TEXT,
+    Kimlik TEXT NOT NULL 
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE Favoriler (
+    Kullanıcı TEXT NOT NULL,
+    Konum_Kimliği TEXT NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
