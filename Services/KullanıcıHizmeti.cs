@@ -6,6 +6,9 @@ namespace bulgarita.Services;
 
 public static class KullanıcıFonksiyonları
 {
+    private static string TabloAdı = "kullanıcı";
+    //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
+
     public static bool BilgiDoğru(string kimlik, string veri, string veri_sütunu)
     {
         string cs = Bağlantı.bağlantı_dizisi;
@@ -233,5 +236,29 @@ public static class KullanıcıFonksiyonları
 
         return kullanıcı;
         
+    }
+    public static bool KullanıcıSil(string kimlik)
+    {
+        try
+        {
+            MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+            bağlantı.Open();
+
+            string kod = $"DELETE FROM {TabloAdı} WHERE kimlik = @kimlik;";
+
+            MySqlCommand komut = new MySqlCommand(kod,bağlantı);
+            komut.Parameters.AddWithValue("@kimlik",kimlik);
+
+            komut.ExecuteNonQuery();
+            
+            komut.Dispose();
+            bağlantı.Close();
+            bağlantı.Dispose();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

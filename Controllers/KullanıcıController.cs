@@ -39,4 +39,17 @@ public class Kullanıcı: ControllerBase
             return BadRequest();
         }
     } 
+
+    [HttpDelete("Silme")]
+    public IActionResult Silme(string kimlik)
+    {
+        if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
 }
