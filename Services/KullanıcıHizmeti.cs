@@ -9,18 +9,14 @@ public static class KullanıcıFonksiyonları
     private static string TabloAdı = "kullanıcı";
     //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
 
-    public static bool BilgiDoğru(string kimlik, string veri, string veri_sütunu)
+    public static bool BilgiDoğru(string kimlik, string veri, string veri_sütunu, MySqlConnection açık_bağlantı)
     {
-        string cs = Bağlantı.bağlantı_dizisi;
-        MySqlConnection bağlantı = new MySqlConnection(cs);
-        bağlantı.Open();
-
         //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
         string tablo = "kullanıcı";
 
         string kod = $"SELECT COUNT(kimlik) FROM {tablo} WHERE {veri_sütunu} = @veri AND kimlik = @kimlik";
 
-        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
         komut.Parameters.AddWithValue("@veri", veri);
         komut.Parameters.AddWithValue("@kimlik", kimlik);
@@ -28,9 +24,6 @@ public static class KullanıcıFonksiyonları
         int sonuc = int.Parse(komut.ExecuteScalar().ToString());
 
         komut.Dispose();
-        bağlantı.Close();
-        bağlantı.Dispose();
-
         return (sonuc >= 1);
     }
 
@@ -58,21 +51,33 @@ public static class KullanıcıFonksiyonları
         return (sonuc >= 1);
     }
 
-    public static bool VeriGuncelle(string kimlik, string veri_sütunu, string eski_veri, string yeni_veri)
+    public static bool VeriVarAçık(string sütun, string veri, MySqlConnection açık_bağlantı)
     {
-        if(BilgiDoğru(kimlik, eski_veri, veri_sütunu))
-        {
-            string cs = Bağlantı.bağlantı_dizisi;
-            
-            MySqlConnection bağlantı = new MySqlConnection(cs);
-            bağlantı.Open();
+         //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
+        string tablo = "kullanıcı";
 
+        string kod = $"SELECT COUNT({sütun}) FROM {tablo} WHERE {sütun} = @veri";
+
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
+
+        komut.Parameters.AddWithValue("@veri", veri);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+
+        komut.Dispose();
+        return (sonuc >= 1);
+    }
+
+     public static bool VeriGuncelle(string kimlik, string veri_sütunu, string yeni_veri, MySqlConnection açık_bağlantı)
+    {
+        try
+        {
             //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
             string tablo = "kullanıcı";
 
-            string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kimlik = @kimlik";
+            string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
-            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+            MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
             komut.Parameters.AddWithValue("@yeni_veri", yeni_veri);
             komut.Parameters.AddWithValue("@kimlik", kimlik);
@@ -80,15 +85,13 @@ public static class KullanıcıFonksiyonları
             komut.ExecuteNonQuery();
             komut.Dispose();
 
-            bağlantı.Close();
-            bağlantı.Dispose();
-
             return true;
         }
-        else
+        catch
         {
             return false;
         }
+
     }
 
     public static bool kullanıcıEkle(Models.Kullanıcı kullanıcı)
@@ -100,7 +103,7 @@ public static class KullanıcıFonksiyonları
 
         string tablo_ismi = "kullanıcı";
         
-        if(!VeriVar("Kullanıcı_Adı", kullanıcı.Adı) && !VeriVar("E_Posta", kullanıcı.E_posta))
+        if(!VeriVarAçık("Kullanıcı_Adı", kullanıcı.Adı, bağlantı) && !VeriVarAçık("E_Posta", kullanıcı.E_posta, bağlantı))
         {
             string kod = 
             $"INSERT INTO {tablo_ismi}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
@@ -237,20 +240,67 @@ public static class KullanıcıFonksiyonları
         return kullanıcı;
         
     }
+    
     public static bool KullanıcıSil(string kimlik)
+    {
+        string[] tablo_isimleri = new string[4];
+        tablo_isimleri[0] = "kullanıcı";
+        tablo_isimleri[1] = "bilgi_doğrulama";
+        tablo_isimleri[2] = "oturum";
+        tablo_isimleri[3] = "favoriler";
+        try
+        {
+            MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+            bağlantı.Open();
+
+            string kod = $"DELETE FROM {tablo_isimleri[0]} WHERE kimlik = @kimlik;";
+
+            MySqlCommand komut = new MySqlCommand(kod,bağlantı);
+            komut.Parameters.AddWithValue("@kimlik",kimlik);
+
+            komut.ExecuteNonQuery();
+
+            komut.Dispose();
+
+            for(int i = 1; i<3; i++)
+            {
+                kod = $"DELETE FROM {tablo_isimleri[i]} WHERE kullanıcı = @kimlik;";
+
+                komut = new MySqlCommand(kod,bağlantı);
+                komut.Parameters.AddWithValue("@kimlik",kimlik);
+
+                komut.ExecuteNonQuery();
+
+                komut.Dispose();
+            }
+
+            FavorilerFonksiyonları.VeriGuncelle(kimlik, "Kullanıcı","anonim");
+
+            bağlantı.Close();
+            bağlantı.Dispose();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static bool KullanıcıAdıDeğiştir(string GirilenParola, string Kimlik, string Yeni_KullanıcıAdı)
     {
         try
         {
             MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
             bağlantı.Open();
 
-            string kod = $"DELETE FROM {TabloAdı} WHERE kimlik = @kimlik;";
+            string kod = $"Update {TabloAdı} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
 
             MySqlCommand komut = new MySqlCommand(kod,bağlantı);
-            komut.Parameters.AddWithValue("@kimlik",kimlik);
+            komut.Parameters.AddWithValue("@kimlik",Kimlik);
+            komut.Parameters.AddWithValue("@yeni_veri",Yeni_KullanıcıAdı);
 
             komut.ExecuteNonQuery();
-            
+
             komut.Dispose();
             bağlantı.Close();
             bağlantı.Dispose();

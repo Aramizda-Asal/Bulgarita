@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
 using bulgarita.Models;
 using bulgarita;
-using MySql.Data.MySqlClient;
-using Google.Protobuf.WellKnownTypes;
 
 namespace bulgarita.Controllers;
 
@@ -28,9 +26,18 @@ public class Kullanıcı: ControllerBase
     }
 
     [HttpPut("Düzenleme")]
-    public IActionResult Düzenleme(string kimlik, string veri_sütunu, string eski_veri, string yeni_veri)
+    public IActionResult Düzenleme(string kimlik, /*string veri_sütunu, string eski_veri, string yeni_veri,*/ string GirilenParola, string Yeni_KullanıcıAdı)
     {
+        /*
         if(KullanıcıFonksiyonları.VeriGuncelle(kimlik, veri_sütunu, eski_veri, yeni_veri))
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }*/
+        if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(GirilenParola, kimlik, Yeni_KullanıcıAdı))
         {
             return Ok();
         }
