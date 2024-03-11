@@ -1,5 +1,6 @@
 using bulgarita.Models;
 using bulgarita;
+using System.Security.Cryptography;
 using MySql.Data.MySqlClient;
 
 namespace bulgarita.Services;
@@ -309,6 +310,23 @@ public static class KullanıcıFonksiyonları
         catch
         {
             return false;
+        }
+    }
+
+    public static string Yeni_Kimlik()
+    {
+        RandomNumberGenerator üreteç =RandomNumberGenerator.Create();
+        byte[] köri = new byte[24];
+
+        üreteç.GetBytes(köri);
+        string kimlik = Convert.ToBase64String(köri);
+        if(!VeriVar("kimlik", kimlik))
+        {
+            return kimlik;
+        }
+        else
+        {
+            return Yeni_Kimlik();
         }
     }
 }
