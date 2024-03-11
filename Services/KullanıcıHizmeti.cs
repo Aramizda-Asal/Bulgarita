@@ -174,6 +174,8 @@ public static class KullanıcıFonksiyonları
             kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
         }
         
+        okuyucu.Close();
+        
         komut.Dispose();
         return kullanıcı;
     }
@@ -218,6 +220,8 @@ public static class KullanıcıFonksiyonları
             kullanıcı.Tür = tür;
             kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
         }
+
+        okuyucu.Close();
         
         komut.Dispose();
 
@@ -271,28 +275,37 @@ public static class KullanıcıFonksiyonları
 
     public static bool KullanıcıAdıDeğiştir(string GirilenParola, string Kimlik, string Yeni_KullanıcıAdı)
     {
-        try
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(Kimlik,bağlantı);
+        bool çıktı = false;
+
+        if(Parolalar.ParolaDoğru(GirilenParola,kullanıcı.Şifre))
         {
-            MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
-            bağlantı.Open();
+            try
+            {
+                string kod = $"Update {TabloAdı} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
 
-            string kod = $"Update {TabloAdı} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
+                MySqlCommand komut = new MySqlCommand(kod,bağlantı);
+                komut.Parameters.AddWithValue("@kimlik",Kimlik);
+                komut.Parameters.AddWithValue("@yeni_veri",Yeni_KullanıcıAdı);
 
-            MySqlCommand komut = new MySqlCommand(kod,bağlantı);
-            komut.Parameters.AddWithValue("@kimlik",Kimlik);
-            komut.Parameters.AddWithValue("@yeni_veri",Yeni_KullanıcıAdı);
+                komut.ExecuteNonQuery();
+                komut.Dispose();
 
-            komut.ExecuteNonQuery();
-
-            komut.Dispose();
-            bağlantı.Close();
-            bağlantı.Dispose();
-            return true;
+                çıktı = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                çıktı = false;
+            }
         }
-        catch
-        {
-            return false;
-        }
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+        return çıktı;
     }
 
     public static string Yeni_Kimlik()
