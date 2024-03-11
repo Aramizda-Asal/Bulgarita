@@ -9,6 +9,9 @@ namespace bulgarita.Services;
 
 public static class FavorilerFonksiyonları
 {
+    private static string TabloAdı = "Favoriler";
+    //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
+
     public static void VeriGuncelle(string kimlik, string veri_sütunu, string yeni_veri)
     {
         string cs = Bağlantı.bağlantı_dizisi;
@@ -16,10 +19,7 @@ public static class FavorilerFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "favoriler";
-
-        string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
+        string kod = $"Update {TabloAdı} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 

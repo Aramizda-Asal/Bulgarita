@@ -7,15 +7,12 @@ namespace bulgarita.Services;
 
 public static class KullanıcıFonksiyonları
 {
-    private static string TabloAdı = "kullanıcı";
+    private static string TabloAdı = "Kullanıcı";
     //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
 
     public static bool BilgiDoğru(string kimlik, string veri, string veri_sütunu, MySqlConnection açık_bağlantı)
     {
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT(kimlik) FROM {tablo} WHERE {veri_sütunu} = @veri AND kimlik = @kimlik";
+        string kod = $"SELECT COUNT(kimlik) FROM {TabloAdı} WHERE {veri_sütunu} = @veri AND kimlik = @kimlik";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -34,10 +31,7 @@ public static class KullanıcıFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT({sütun}) FROM {tablo} WHERE {sütun} = @veri";
+        string kod = $"SELECT COUNT({sütun}) FROM {TabloAdı} WHERE {sütun} = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
@@ -54,10 +48,7 @@ public static class KullanıcıFonksiyonları
 
     public static bool VeriVarAçık(string sütun, string veri, MySqlConnection açık_bağlantı)
     {
-         //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT({sütun}) FROM {tablo} WHERE {sütun} = @veri";
+        string kod = $"SELECT COUNT({sütun}) FROM {TabloAdı} WHERE {sütun} = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -73,10 +64,7 @@ public static class KullanıcıFonksiyonları
     {
         try
         {
-            //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-            string tablo = "kullanıcı";
-
-            string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
+            string kod = $"Update {TabloAdı} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
             MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -101,15 +89,13 @@ public static class KullanıcıFonksiyonları
 
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
-
-        string tablo_ismi = "kullanıcı";
         
         if(!VeriVarAçık("Kullanıcı_Adı", kullanıcı.Adı, bağlantı) && !VeriVarAçık("E_Posta", kullanıcı.E_posta, bağlantı))
         {
             kullanıcı.Şifre = Parolalar.KarılmışParola(kullanıcı.Şifre, Parolalar.Tuz());
 
             string kod = 
-            $"INSERT INTO {tablo_ismi}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
+            $"INSERT INTO {TabloAdı}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
 
             MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
@@ -137,9 +123,7 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT(kimlik) from {tablo} where kimlik = @veri";
+        string kod = $"SELECT COUNT(kimlik) from {TabloAdı} where kimlik = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -155,7 +139,7 @@ public static class KullanıcıFonksiyonları
         
         komut.Dispose();
 
-        kod = $"SELECT * FROM kullanıcı WHERE kimlik = @kullanıcı_kimliği";
+        kod = $"SELECT * FROM {TabloAdı} WHERE kimlik = @kullanıcı_kimliği";
 
         komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -184,9 +168,7 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT(kullanıcı_adı) from {tablo} where kullanıcı_adı = @veri";
+        string kod = $"SELECT COUNT(kullanıcı_adı) from {TabloAdı} where kullanıcı_adı = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -200,7 +182,7 @@ public static class KullanıcıFonksiyonları
             return null;
         }
 
-        kod = $"SELECT * FROM kullanıcı WHERE Kullanıcı_Adı = @Kullanıcı_Adı";
+        kod = $"SELECT * FROM {TabloAdı} WHERE Kullanıcı_Adı = @Kullanıcı_Adı";
 
         komut.Dispose();
 
@@ -231,10 +213,10 @@ public static class KullanıcıFonksiyonları
     public static bool KullanıcıSil(string kimlik)
     {
         string[] tablo_isimleri = new string[4];
-        tablo_isimleri[0] = "kullanıcı";
-        tablo_isimleri[1] = "bilgi_doğrulama";
-        tablo_isimleri[2] = "oturum";
-        tablo_isimleri[3] = "favoriler";
+        tablo_isimleri[0] = TabloAdı;
+        tablo_isimleri[1] = "Bilgi_Doğrulama";
+        tablo_isimleri[2] = "Oturum";
+        tablo_isimleri[3] = "Favoriler";
         try
         {
             MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
