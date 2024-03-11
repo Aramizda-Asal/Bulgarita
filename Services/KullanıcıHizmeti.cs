@@ -131,20 +131,15 @@ public static class KullanıcıFonksiyonları
         }
     }
 
-    public static Models.Kullanıcı kullanıcıAl_Kimlik(string Kimlik)
+    public static Models.Kullanıcı kullanıcıAl_Kimlik_Açık(string Kimlik, MySqlConnection açık_bağlantı)
     {
-        string cs = Bağlantı.bağlantı_dizisi;
-
         Kullanıcı_tür tür;
 
         string tablo = "kullanıcı";
 
-        MySqlConnection bağlantı = new MySqlConnection(cs);
-        bağlantı.Open();
-
         string kod = $"SELECT COUNT(kimlik) from {tablo} where kimlik = @veri";
 
-        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
         komut.Parameters.AddWithValue("@veri", Kimlik);
 
@@ -153,8 +148,6 @@ public static class KullanıcıFonksiyonları
         if(sonuc < 1)
         {
             komut.Dispose();
-            bağlantı.Close();
-            bağlantı.Dispose();
             return null;
         }
         
@@ -162,7 +155,7 @@ public static class KullanıcıFonksiyonları
 
         kod = $"SELECT * FROM kullanıcı WHERE kimlik = @kullanıcı_kimliği";
 
-        komut = new MySqlCommand(kod, bağlantı);
+        komut = new MySqlCommand(kod, açık_bağlantı);
 
         komut.Parameters.AddWithValue("@kullanıcı_kimliği",Kimlik);
         Models.Kullanıcı kullanıcı = new Models.Kullanıcı();
@@ -180,26 +173,18 @@ public static class KullanıcıFonksiyonları
         }
         
         komut.Dispose();
-        bağlantı.Close();
-        bağlantı.Dispose();
-
         return kullanıcı;
     }
 
-    public static Models.Kullanıcı kullanıcıAl_KullanıcıAdı(string Kullanıcı_Adı)
+    public static Models.Kullanıcı kullanıcıAl_KullanıcıAdı_Açık(string Kullanıcı_Adı, MySqlConnection açık_bağlantı)
     {
-        string cs = Bağlantı.bağlantı_dizisi;
-
         Kullanıcı_tür tür;
-
-        MySqlConnection bağlantı = new MySqlConnection(cs);
-        bağlantı.Open();
 
         string tablo = "kullanıcı";
 
         string kod = $"SELECT COUNT(kullanıcı_adı) from {tablo} where kullanıcı_adı = @veri";
 
-        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
         komut.Parameters.AddWithValue("@veri", Kullanıcı_Adı);
 
@@ -208,8 +193,6 @@ public static class KullanıcıFonksiyonları
         if(sonuc < 1)
         {   
             komut.Dispose();
-            bağlantı.Close();
-            bağlantı.Dispose();
             return null;
         }
 
@@ -217,7 +200,7 @@ public static class KullanıcıFonksiyonları
 
         komut.Dispose();
 
-        komut = new MySqlCommand(kod, bağlantı);
+        komut = new MySqlCommand(kod, açık_bağlantı);
 
         komut.Parameters.AddWithValue("@Kullanıcı_Adı",Kullanıcı_Adı);
         Models.Kullanıcı kullanıcı = new Models.Kullanıcı();
@@ -235,11 +218,8 @@ public static class KullanıcıFonksiyonları
         }
         
         komut.Dispose();
-        bağlantı.Close();
-        bağlantı.Dispose();
 
         return kullanıcı;
-        
     }
     
     public static bool KullanıcıSil(string kimlik)
