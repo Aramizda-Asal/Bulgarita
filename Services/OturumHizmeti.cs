@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace bulgarita.Services;
 
-public static class OturumFonksiyonları
+public static class OturumVT
 {
     public static bool OturumAç(string kullanıcı_kimliği, string oturum_kimliği, double süre_saat)
     {
