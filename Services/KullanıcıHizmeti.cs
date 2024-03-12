@@ -274,6 +274,43 @@ public static class KullanıcıFonksiyonları
         return çıktı;
     }
 
+    public static bool ParolaDeğiştir(string GirilenParola, string Kimlik, string Yeni_Parola)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(Kimlik,bağlantı);
+        bool çıktı = false;
+
+        Yeni_Parola = Parolalar.KarılmışParola(Yeni_Parola,Parolalar.Tuz());
+
+        if(Parolalar.ParolaDoğru(GirilenParola,kullanıcı.Şifre))
+        {
+            try
+            {
+                string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} SET Parola = @yeni_veri WHERE Kimlik = @kimlik";
+
+                MySqlCommand komut = new MySqlCommand(kod,bağlantı);
+                komut.Parameters.AddWithValue("@kimlik",Kimlik);
+                komut.Parameters.AddWithValue("@yeni_veri",Yeni_Parola);
+
+                komut.ExecuteNonQuery();
+                komut.Dispose();
+
+                çıktı = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                çıktı = false;
+            }
+        }
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+        return çıktı;
+    }
+
     public static string Yeni_Kimlik()
     {
         RandomNumberGenerator üreteç =RandomNumberGenerator.Create();
