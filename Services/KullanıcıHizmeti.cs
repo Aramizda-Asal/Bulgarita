@@ -166,7 +166,7 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string kod = $"SELECT COUNT(kullanıcı_adı) from {TabloAdı} where kullanıcı_adı = @veri";
+        string kod = $"SELECT COUNT(kullanıcı_adı) from {Bağlantı.Kullanıcı_Tablosu} where kullanıcı_adı = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -180,7 +180,7 @@ public static class KullanıcıFonksiyonları
             return null;
         }
 
-        kod = $"SELECT * FROM {TabloAdı} WHERE Kullanıcı_Adı = @Kullanıcı_Adı";
+        kod = $"SELECT * FROM {Bağlantı.Kullanıcı_Tablosu} WHERE Kullanıcı_Adı = @Kullanıcı_Adı";
 
         komut.Dispose();
 

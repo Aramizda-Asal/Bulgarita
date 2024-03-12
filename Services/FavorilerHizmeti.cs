@@ -9,9 +9,6 @@ namespace bulgarita.Services;
 
 public static class FavorilerFonksiyonları
 {
-    private static string TabloAdı = "Favoriler";
-    //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
-
     public static void VeriGuncelle(string kimlik, string veri_sütunu, string yeni_veri)
     {
         string cs = Bağlantı.bağlantı_dizisi;
