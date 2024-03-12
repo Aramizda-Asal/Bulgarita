@@ -10,6 +10,19 @@ namespace bulgarita.Controllers;
 
 public class Kullanıcı: ControllerBase
 {
+    [HttpGet("Girme")]
+    public IActionResult Girme(string Kullanıcı_Adı, string Parola)
+    {
+        if(KullanıcıFonksiyonları.Kullanıcı_Girişi(Parola, Kullanıcı_Adı))
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
+
     [HttpPost("Ekleme")]
     public IActionResult Ekleme(string Kullanıcı_Adı, string E_Posta, string Parola, Kullanıcı_tür Tür)
     {

@@ -2,6 +2,7 @@ using bulgarita.Models;
 using bulgarita;
 using System.Security.Cryptography;
 using MySql.Data.MySqlClient;
+using EmailValidation;
 
 namespace bulgarita.Services;
 
@@ -226,7 +227,7 @@ public static class KullanıcıFonksiyonları
             komut.Dispose();
 
             //Diğer tablolardan silinmesi diğer hizmetler eklendiğinde eklenecektir.
-            
+
             FavorilerFonksiyonları.VeriGuncelle(kimlik, "Kullanıcı","anonim");
 
             bağlantı.Close();
@@ -326,5 +327,47 @@ public static class KullanıcıFonksiyonları
         {
             return Yeni_Kimlik();
         }
+    }
+
+    public static bool Kullanıcı_Girişi(string GirilenParola, string GirilenKullanıcıAdı)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+        bool çıktı = false;
+
+        if(EmailValidator.Validate(GirilenKullanıcıAdı, true, true))
+        {
+            if(VeriVarAçık("E_Posta", GirilenKullanıcıAdı, bağlantı))
+            {
+                string kod = $"SELECT Parola FROM {Bağlantı.Kullanıcı_Tablosu} WHERE E_Posta = @e_posta";
+
+                MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+                komut.Parameters.AddWithValue("@e_posta", GirilenKullanıcıAdı);
+
+                if(Parolalar.ParolaDoğru(GirilenParola, komut.ExecuteScalar().ToString()))
+                {
+                    çıktı = true;
+                }
+                komut.Dispose();
+            }
+        }
+        else
+        {
+            if(VeriVarAçık("Kullanıcı_Adı", GirilenKullanıcıAdı, bağlantı))
+            {
+                Kullanıcı kullanıcı = kullanıcıAl_KullanıcıAdı_Açık(GirilenKullanıcıAdı, bağlantı);
+                if(Parolalar.ParolaDoğru(GirilenParola, kullanıcı.Şifre))
+                {
+                    çıktı = true;
+                }
+            }
+        }
+        
+
+
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+        return çıktı;
     }
 }
