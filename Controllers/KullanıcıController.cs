@@ -10,19 +10,6 @@ namespace bulgarita.Controllers;
 
 public class Kullanıcı: ControllerBase
 {
-    [HttpGet("GirişYap")]
-    public IActionResult GirişYap(string Kullanıcı_Adı, string Parola)
-    {
-        if(KullanıcıFonksiyonları.Kullanıcı_Girişi(Parola, Kullanıcı_Adı))
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
-
     [HttpPost("KullanıcıEkle")]
     public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola, Kullanıcı_tür Tür)
     {

@@ -327,22 +327,23 @@ public static class KullanıcıFonksiyonları
         }
     }
 
-    public static bool Kullanıcı_Girişi(string GirilenParola, string GirilenKullanıcıAdı)
+    public static bool GirişBilgileriDoğru(string kullanıcı_adı, string parola)
     {
         MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
         bağlantı.Open();
         bool çıktı = false;
 
-        if(EmailValidator.Validate(GirilenKullanıcıAdı, true, true))
+        if(EmailValidator.Validate(kullanıcı_adı, true, true))
         {
-            if(VeriVarAçık("E_Posta", GirilenKullanıcıAdı, bağlantı))
+            // E-posta ile giriş yapılıyorsa
+            if(VeriVarAçık("E_Posta", kullanıcı_adı, bağlantı))
             {
-                string kod = $"SELECT Parola FROM {Bağlantı.Kullanıcı_Tablosu} WHERE E_Posta = @e_posta";
+                string kod = $"SELECT Parola FROM {Bağlantı.Kullanıcı_Tablosu} WHERE E_Posta = @e_posta;";
 
                 MySqlCommand komut = new MySqlCommand(kod, bağlantı);
-                komut.Parameters.AddWithValue("@e_posta", GirilenKullanıcıAdı);
+                komut.Parameters.AddWithValue("@e_posta", kullanıcı_adı);
 
-                if(Parolalar.ParolaDoğru(GirilenParola, komut.ExecuteScalar().ToString()))
+                if(Parolalar.ParolaDoğru(parola, komut.ExecuteScalar().ToString()))
                 {
                     çıktı = true;
                 }
@@ -351,21 +352,56 @@ public static class KullanıcıFonksiyonları
         }
         else
         {
-            if(VeriVarAçık("Kullanıcı_Adı", GirilenKullanıcıAdı, bağlantı))
+            // Kullanıcı adı ile giriş yapılıyorsa
+            if(VeriVarAçık("Kullanıcı_Adı", kullanıcı_adı, bağlantı))
             {
-                Kullanıcı kullanıcı = kullanıcıAl_KullanıcıAdı_Açık(GirilenKullanıcıAdı, bağlantı);
-                if(Parolalar.ParolaDoğru(GirilenParola, kullanıcı.Şifre))
+                Kullanıcı kullanıcı = kullanıcıAl_KullanıcıAdı_Açık(kullanıcı_adı, bağlantı);
+                if(Parolalar.ParolaDoğru(parola, kullanıcı.Şifre))
                 {
                     çıktı = true;
                 }
             }
         }
         
-
-
-
         bağlantı.Close();
         bağlantı.Dispose();
+        return çıktı;
+    }
+    public static bool GirişBilgileriDoğru(string kullanıcı_adı, string parola,
+                        MySqlConnection açık_bağlantı)
+    {
+        bool çıktı = false;
+
+        if(EmailValidator.Validate(kullanıcı_adı, true, true))
+        {
+            // E-posta ile giriş yapılıyorsa
+            if(VeriVarAçık("E_Posta", kullanıcı_adı, açık_bağlantı))
+            {
+                string kod = $"SELECT Parola FROM {Bağlantı.Kullanıcı_Tablosu} WHERE E_Posta = @e_posta;";
+
+                MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
+                komut.Parameters.AddWithValue("@e_posta", kullanıcı_adı);
+
+                if(Parolalar.ParolaDoğru(parola, komut.ExecuteScalar().ToString()))
+                {
+                    çıktı = true;
+                }
+                komut.Dispose();
+            }
+        }
+        else
+        {
+            // Kullanıcı adı ile giriş yapılıyorsa
+            if(VeriVarAçık("Kullanıcı_Adı", kullanıcı_adı, açık_bağlantı))
+            {
+                Kullanıcı kullanıcı = kullanıcıAl_KullanıcıAdı_Açık(kullanıcı_adı, açık_bağlantı);
+                if(Parolalar.ParolaDoğru(parola, kullanıcı.Şifre))
+                {
+                    çıktı = true;
+                }
+            }
+        }
+        
         return çıktı;
     }
 }

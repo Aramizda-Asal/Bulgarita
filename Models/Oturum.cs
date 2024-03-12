@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Security.Cryptography;
 using bulgarita.Services;
 
@@ -10,6 +11,15 @@ public class Oturum
     public DateTime Başlangıç;
     public DateTime Bitiş;
 
+    public Oturum() {}
+    public Oturum(string kullanıcı_kimliği, double süre_saat)
+    {
+        Kullanıcı = kullanıcı_kimliği;
+        Kimlik = YeniKimlik();
+        Başlangıç = DateTime.Now;
+        Bitiş = Başlangıç.AddHours(süre_saat);
+    }
+
     public static string YeniKimlik()
     {
         RandomNumberGenerator üreteç = RandomNumberGenerator.Create();
@@ -18,7 +28,7 @@ public class Oturum
         string sonuç = Convert.ToBase64String(rastgele);
         üreteç.Dispose();
 
-        if (OturumFonksiyonları.KimlikVar(sonuç))
+        if (OturumVT.KimlikVar(sonuç))
         {
             return YeniKimlik();
         }
