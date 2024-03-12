@@ -19,7 +19,7 @@ public static class FavorilerFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        string kod = $"Update {TabloAdı} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
+        string kod = $"Update {Bağlantı.Favoriler_Tablosu} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 

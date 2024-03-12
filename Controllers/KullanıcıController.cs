@@ -10,8 +10,21 @@ namespace bulgarita.Controllers;
 
 public class Kullanıcı: ControllerBase
 {
-    [HttpPost("Ekleme")]
-    public IActionResult Ekleme(string Kullanıcı_Adı, string E_Posta, string Parola, Kullanıcı_tür Tür)
+    [HttpGet("GirişYap")]
+    public IActionResult GirişYap(string Kullanıcı_Adı, string Parola)
+    {
+        if(KullanıcıFonksiyonları.Kullanıcı_Girişi(Parola, Kullanıcı_Adı))
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
+
+    [HttpPost("KullanıcıEkle")]
+    public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola, Kullanıcı_tür Tür)
     {
         string Kimlik = KullanıcıFonksiyonları.Yeni_Kimlik();
         Models.Kullanıcı kullanıcı = new Models.Kullanıcı(Kullanıcı_Adı, E_Posta, Parola, Tür, Kimlik);
@@ -26,18 +39,9 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpPut("Düzenleme")]
-    public IActionResult Düzenleme(string kimlik, /*string veri_sütunu, string eski_veri, string yeni_veri,*/ string GirilenParola, string Yeni_KullanıcıAdı)
+    [HttpPut("KullanıcıAdıDeğiştir")]
+    public IActionResult KullancıAdıDeğiştir(string kimlik, string GirilenParola, string Yeni_KullanıcıAdı)
     {
-        /*
-        if(KullanıcıFonksiyonları.VeriGuncelle(kimlik, veri_sütunu, eski_veri, yeni_veri))
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }*/
         if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(GirilenParola, kimlik, Yeni_KullanıcıAdı))
         {
             return Ok();
@@ -48,8 +52,21 @@ public class Kullanıcı: ControllerBase
         }
     } 
 
-    [HttpDelete("Silme")]
-    public IActionResult Silme(string kimlik)
+    [HttpPut("ParolaDeğiştir")]
+    public IActionResult ParolaDeğiştir(string kimlik, string GirilenParola, string Yeni_Parola)
+    {
+        if(KullanıcıFonksiyonları.ParolaDeğiştir(GirilenParola, kimlik, Yeni_Parola))
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
+
+    [HttpDelete("KullanıcıSil")]
+    public IActionResult KullanıcıSil(string kimlik)
     {
         if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
         {
