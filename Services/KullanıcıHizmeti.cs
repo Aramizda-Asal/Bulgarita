@@ -7,15 +7,9 @@ namespace bulgarita.Services;
 
 public static class KullanıcıFonksiyonları
 {
-    private static string TabloAdı = "kullanıcı";
-    //Buradaki tablo ismi ayarlar dosyasından çekilecektir.
-
     public static bool BilgiDoğru(string kimlik, string veri, string veri_sütunu, MySqlConnection açık_bağlantı)
     {
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT(kimlik) FROM {tablo} WHERE {veri_sütunu} = @veri AND kimlik = @kimlik";
+        string kod = $"SELECT COUNT(kimlik) FROM {Bağlantı.Kullanıcı_Tablosu} WHERE {veri_sütunu} = @veri AND kimlik = @kimlik";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -34,10 +28,7 @@ public static class KullanıcıFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT({sütun}) FROM {tablo} WHERE {sütun} = @veri";
+        string kod = $"SELECT COUNT({sütun}) FROM {Bağlantı.Kullanıcı_Tablosu} WHERE {sütun} = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
@@ -54,10 +45,7 @@ public static class KullanıcıFonksiyonları
 
     public static bool VeriVarAçık(string sütun, string veri, MySqlConnection açık_bağlantı)
     {
-         //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT({sütun}) FROM {tablo} WHERE {sütun} = @veri";
+        string kod = $"SELECT COUNT({sütun}) FROM {Bağlantı.Kullanıcı_Tablosu} WHERE {sütun} = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -73,10 +61,7 @@ public static class KullanıcıFonksiyonları
     {
         try
         {
-            //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-            string tablo = "kullanıcı";
-
-            string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
+            string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
             MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -102,14 +87,12 @@ public static class KullanıcıFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        string tablo_ismi = "kullanıcı";
-        
         if(!VeriVarAçık("Kullanıcı_Adı", kullanıcı.Adı, bağlantı) && !VeriVarAçık("E_Posta", kullanıcı.E_posta, bağlantı))
         {
             kullanıcı.Şifre = Parolalar.KarılmışParola(kullanıcı.Şifre, Parolalar.Tuz());
 
             string kod = 
-            $"INSERT INTO {tablo_ismi}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
+            $"INSERT INTO {Bağlantı.Kullanıcı_Tablosu}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
 
             MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
@@ -137,9 +120,7 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string tablo = "kullanıcı";
-
-        string kod = $"SELECT COUNT(kimlik) from {tablo} where kimlik = @veri";
+        string kod = $"SELECT COUNT(kimlik) from {Bağlantı.Kullanıcı_Tablosu} where kimlik = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -155,7 +136,7 @@ public static class KullanıcıFonksiyonları
         
         komut.Dispose();
 
-        kod = $"SELECT * FROM kullanıcı WHERE kimlik = @kullanıcı_kimliği";
+        kod = $"SELECT * FROM {Bağlantı.Kullanıcı_Tablosu} WHERE kimlik = @kullanıcı_kimliği";
 
         komut = new MySqlCommand(kod, açık_bağlantı);
 
@@ -230,17 +211,12 @@ public static class KullanıcıFonksiyonları
     
     public static bool KullanıcıSil(string kimlik)
     {
-        string[] tablo_isimleri = new string[4];
-        tablo_isimleri[0] = "kullanıcı";
-        tablo_isimleri[1] = "bilgi_doğrulama";
-        tablo_isimleri[2] = "oturum";
-        tablo_isimleri[3] = "favoriler";
         try
         {
             MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
             bağlantı.Open();
 
-            string kod = $"DELETE FROM {tablo_isimleri[0]} WHERE kimlik = @kimlik;";
+            string kod = $"DELETE FROM {Bağlantı.Kullanıcı_Tablosu} WHERE kimlik = @kimlik;";
 
             MySqlCommand komut = new MySqlCommand(kod,bağlantı);
             komut.Parameters.AddWithValue("@kimlik",kimlik);
@@ -249,18 +225,8 @@ public static class KullanıcıFonksiyonları
 
             komut.Dispose();
 
-            for(int i = 1; i<3; i++)
-            {
-                kod = $"DELETE FROM {tablo_isimleri[i]} WHERE kullanıcı = @kimlik;";
-
-                komut = new MySqlCommand(kod,bağlantı);
-                komut.Parameters.AddWithValue("@kimlik",kimlik);
-
-                komut.ExecuteNonQuery();
-
-                komut.Dispose();
-            }
-
+            //Diğer tablolardan silinmesi diğer hizmetler eklendiğinde eklenecektir.
+            
             FavorilerFonksiyonları.VeriGuncelle(kimlik, "Kullanıcı","anonim");
 
             bağlantı.Close();
@@ -285,7 +251,7 @@ public static class KullanıcıFonksiyonları
         {
             try
             {
-                string kod = $"Update {TabloAdı} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
+                string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
 
                 MySqlCommand komut = new MySqlCommand(kod,bağlantı);
                 komut.Parameters.AddWithValue("@kimlik",Kimlik);
