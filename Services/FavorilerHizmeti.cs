@@ -16,10 +16,7 @@ public static class FavorilerFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        //Burdaki tablo ismi ayarlar dosyasından çekilecektir.
-        string tablo = "favoriler";
-
-        string kod = $"Update {tablo} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
+        string kod = $"Update {Bağlantı.Favoriler_Tablosu} SET {veri_sütunu} = @yeni_veri WHERE Kullanıcı = @kimlik";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
