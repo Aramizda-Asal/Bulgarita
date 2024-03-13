@@ -8,4 +8,21 @@ namespace bulgarita.Controllers;
 [Route("[controller]")]
 
 public class Oturum : ControllerBase
-{}
+{
+
+    [HttpGet("GirişYap")]
+    public string[] GirişYap(string kullanıcı_adı, string parola)
+    {
+        Models.Oturum yeni_oturum = OturumFonksiyonları.OturumBaşlat(kullanıcı_adı, parola);
+
+        if (yeni_oturum != null)
+        {
+            return yeni_oturum.ToStringArray();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+}

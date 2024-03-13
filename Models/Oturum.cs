@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Security.Cryptography;
+using System.Text;
 using bulgarita.Services;
 
 namespace bulgarita.Models;
@@ -18,6 +19,28 @@ public class Oturum
         Kimlik = YeniKimlik();
         Başlangıç = DateTime.Now;
         Bitiş = Başlangıç.AddHours(süre_saat);
+    }
+    public override string ToString()
+    {
+        string ayraç = "üğ₺";
+        StringBuilder çıktı = new StringBuilder();
+        çıktı.Append(Kullanıcı);
+        çıktı.Append(ayraç);
+        çıktı.Append(Kimlik);
+        çıktı.Append(ayraç);
+        çıktı.Append(Başlangıç.ToString("yyyyMMddHHmmss"));
+        çıktı.Append(ayraç);
+        çıktı.Append(Bitiş.ToString("yyyyMMddHHmmss"));
+        return çıktı.ToString();
+    }
+    public virtual string[] ToStringArray()
+    {
+        string[] çıktı = new string[4];
+        çıktı[0] = Kullanıcı;
+        çıktı[1] = Kimlik;
+        çıktı[2] = Başlangıç.ToString("yyyyMMddHHmmss");
+        çıktı[3] = Bitiş.ToString("yyyyMMddHHmmss");
+        return çıktı;
     }
 
     public static string YeniKimlik()
