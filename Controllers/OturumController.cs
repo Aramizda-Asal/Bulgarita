@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using bulgarita.Models;
 using bulgarita.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace bulgarita.Controllers;
 
@@ -9,8 +10,7 @@ namespace bulgarita.Controllers;
 
 public class Oturum : ControllerBase
 {
-
-    [HttpGet("GirişYap")]
+    [HttpGet("GirişYap/{kullanıcı_adı}/{parola}")]
     public string[] GirişYap(string kullanıcı_adı, string parola)
     {
         Models.Oturum yeni_oturum = OturumFonksiyonları.OturumBaşlat(kullanıcı_adı, parola);
@@ -25,4 +25,18 @@ public class Oturum : ControllerBase
         }
     }
 
+    [HttpPost("OturumAçık/{oturum}/{kullanıcı}")]
+    public IActionResult OturumAçık(string oturum, string kullanıcı)
+    {
+        bool oturum_açık = OturumVT.OturumAçık(kullanıcı, oturum);
+
+        if(oturum_açık)
+        {
+            return Ok();
+        }
+        else
+        {
+            return new StatusCodeResult(403); // Forbidden
+        }
+    }
 }

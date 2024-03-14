@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Globalization;
 using bulgarita.Models;
 using MySql.Data.MySqlClient;
 
@@ -126,6 +127,127 @@ public static class OturumVT
 
         komut.Dispose();
         return başarılı;
+    }
+
+    public static bool OturumAçık(string kullanıcı_kimliği, string oturum_kimliği)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        StringBuilder komut_metni = new StringBuilder();
+
+        komut_metni.Append($"SELECT COUNT(Kimlik) FROM {Bağlantı.Oturum_Tablosu} ");
+        komut_metni.Append("WHERE Kullanıcı = @kullanıcı AND Kimlik = @kimlik;");
+        MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), bağlantı);
+        komut.Parameters.AddWithValue("@kullanıcı", kullanıcı_kimliği);
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+
+        int nicelik = int.Parse(komut.ExecuteScalar().ToString());
+        komut.Dispose();
+        komut_metni.Clear();
+
+        if (nicelik != 1)
+        {
+            komut.Dispose();
+            bağlantı.Close();
+            bağlantı.Dispose();
+            return false;
+        }
+        
+        komut_metni.Append($"SELECT Başlangıç, Bitiş FROM {Bağlantı.Oturum_Tablosu} ");
+        komut_metni.Append("WHERE Kullanıcı = @kullanıcı AND Kimlik = @kimlik;");
+        komut = new MySqlCommand(komut_metni.ToString(), bağlantı);
+        komut.Parameters.AddWithValue("@kullanıcı", kullanıcı_kimliği);
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+
+        DateTime baş = new DateTime();
+        DateTime son = new DateTime();
+        MySqlDataReader okuyucu = komut.ExecuteReader();
+        while (okuyucu.Read())
+        {
+            DateTime.TryParseExact
+            (
+                okuyucu["Başlangıç"].ToString(),
+                "yyyyMMddHHmmss",
+                Yerelleştirme.Yöre,
+                DateTimeStyles.None,
+                out baş
+            );
+            DateTime.TryParseExact
+            (
+                okuyucu["Bitiş"].ToString(),
+                "yyyyMMddHHmmss",
+                Yerelleştirme.Yöre,
+                DateTimeStyles.None,
+                out son
+            );
+        }
+        okuyucu.Close();
+        komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        bool baş_önce = DateTime.Compare(baş, son) < 0;
+        bool son_gelmemiş = DateTime.Compare(son, DateTime.Now) > 0;
+        
+        return (baş_önce && son_gelmemiş);
+    }
+    public static bool OturumAçık(string kullanıcı_kimliği,
+                        string oturum_kimliği, MySqlConnection açık_bağlantı)
+    {
+        StringBuilder komut_metni = new StringBuilder();
+
+        komut_metni.Append($"SELECT COUNT(Kimlik) FROM {Bağlantı.Oturum_Tablosu} ");
+        komut_metni.Append("WHERE Kullanıcı = @kullanıcı AND Kimlik = @kimlik;");
+        MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), açık_bağlantı);
+        komut.Parameters.AddWithValue("@kullanıcı", kullanıcı_kimliği);
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+
+        int nicelik = int.Parse(komut.ExecuteScalar().ToString());
+        komut.Dispose();
+        komut_metni.Clear();
+
+        if (nicelik != 1)
+        {
+            komut.Dispose();
+            return false;
+        }
+        
+        komut_metni.Append($"SELECT Başlangıç, Bitiş FROM {Bağlantı.Oturum_Tablosu} ");
+        komut_metni.Append("WHERE Kullanıcı = @kullanıcı AND Kimlik = @kimlik;");
+        komut = new MySqlCommand(komut_metni.ToString(), açık_bağlantı);
+        komut.Parameters.AddWithValue("@kullanıcı", kullanıcı_kimliği);
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+
+        DateTime baş = new DateTime();
+        DateTime son = new DateTime();
+        MySqlDataReader okuyucu = komut.ExecuteReader();
+        while (okuyucu.Read())
+        {
+            DateTime.TryParseExact
+            (
+                okuyucu["Başlangıç"].ToString(),
+                "yyyyMMddHHmmss",
+                Yerelleştirme.Yöre,
+                DateTimeStyles.None,
+                out baş
+            );
+            DateTime.TryParseExact
+            (
+                okuyucu["Son"].ToString(),
+                "yyyyMMddHHmmss",
+                Yerelleştirme.Yöre,
+                DateTimeStyles.None,
+                out son
+            );
+        }
+        okuyucu.Close();
+        komut.Dispose();
+
+        bool baş_önce = DateTime.Compare(baş, son) < 0;
+        bool son_gelmemiş = DateTime.Compare(son, DateTime.Now) > 0;
+        
+        return baş_önce && son_gelmemiş;
     }
 
     public static bool KimlikVar(string oturum_kimliği)
