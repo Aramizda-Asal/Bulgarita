@@ -40,7 +40,7 @@ public static class Parolalar
         sonuç.Append(karıcı.MemorySize);
         sonuç.Append(',');
         sonuç.Append(karma.Length);
-        return sonuç.ToString(); 
+        return Temizlik.YolaUydur(sonuç.ToString());
     }
 
     public static bool ParolaDoğru(string girilen, string bilinen)
@@ -59,11 +59,12 @@ public static class Parolalar
 
         byte[] girilenB = Encoding.Unicode.GetBytes(girilen);
         Argon2id karıcı = new Argon2id(girilenB);
-        karıcı.Salt = Convert.FromBase64String(ParolaBilgiler[1]);
+        karıcı.Salt = Convert.FromBase64String(Temizlik.YolaUygundanBase64(ParolaBilgiler[1]));
         karıcı.DegreeOfParallelism = ayarlar[0];
         karıcı.Iterations = ayarlar[1];
         karıcı.MemorySize = ayarlar[2];
         string girilenin_karması = Convert.ToBase64String(karıcı.GetBytes(ayarlar[3]));
+        girilenin_karması = Temizlik.YolaUydur(girilenin_karması);
 
         return String.Equals(girilenin_karması, ParolaBilgiler[0]);
     }
