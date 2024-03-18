@@ -128,6 +128,58 @@ public static class OturumVT
         komut.Dispose();
         return başarılı;
     }
+    
+    public static bool OturumKapat(string oturum_kimliği)
+    {
+        bool sonuç = false;
+
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        StringBuilder komut_metni = new StringBuilder();
+        komut_metni.Append($"UPDATE {Bağlantı.bağlantı_dizisi} ");
+        komut_metni.Append("SET Bitiş = @şimdi WHERE Kimlik = @kimlik;");
+        MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), bağlantı);
+        komut.Parameters.AddWithValue("@şimdi", DateTime.Now.ToString("yyyyMMddHHmmss"));
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+        
+        try
+        {
+            komut.ExecuteNonQuery();
+            sonuç = true;
+        }
+        catch
+        {}
+
+        komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return sonuç;
+    }
+    public static bool OturumKapat(string oturum_kimliği, MySqlConnection açık_bağlantı)
+    {
+        bool sonuç = false;
+
+        StringBuilder komut_metni = new StringBuilder();
+        komut_metni.Append($"UPDATE {Bağlantı.Oturum_Tablosu} ");
+        komut_metni.Append("SET Bitiş = @şimdi WHERE Kimlik = @kimlik;");
+        MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), açık_bağlantı);
+        komut.Parameters.AddWithValue("@şimdi", DateTime.Now.ToString("yyyyMMddHHmmss"));
+        komut.Parameters.AddWithValue("@kimlik", oturum_kimliği);
+        
+        try
+        {
+            komut.ExecuteNonQuery();
+            sonuç = true;
+        }
+        catch
+        {}
+
+        komut.Dispose();
+
+        return sonuç;
+    }
 
     public static bool OturumAçık(string kullanıcı_kimliği, string oturum_kimliği)
     {
@@ -234,7 +286,7 @@ public static class OturumVT
             );
             DateTime.TryParseExact
             (
-                okuyucu["Son"].ToString(),
+                okuyucu["Bitiş"].ToString(),
                 "yyyyMMddHHmmss",
                 Yerelleştirme.Yöre,
                 DateTimeStyles.None,

@@ -39,4 +39,19 @@ public class Oturum : ControllerBase
             return new StatusCodeResult(403); // Forbidden
         }
     }
+
+    [HttpPost("OturumKapat/{oturum}/{kullanıcı}")]
+    public IActionResult OturumKapat(string oturum, string kullanıcı)
+    {
+        bool kapandı = OturumFonksiyonları.OturumBitir(kullanıcı, oturum);
+
+        if (kapandı)
+        {
+            return Ok();
+        }
+        else
+        {
+            return new StatusCodeResult(422); // Unprocessable Content
+        }
+    }
 }
