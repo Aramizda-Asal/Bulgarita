@@ -37,4 +37,23 @@ public static class OturumFonksiyonları
         bağlantı.Dispose();
         return null;
     }
+    
+    public static bool OturumBitir(string kullanıcı_kimliği, string oturum_kimliği)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        bool oturum_açık = OturumVT.OturumAçık(kullanıcı_kimliği, oturum_kimliği, bağlantı);
+        if (!oturum_açık)
+        {
+            bağlantı.Close();
+            bağlantı.Dispose();
+            return true;
+        }
+
+        bool kapandı = OturumVT.OturumKapat(oturum_kimliği, bağlantı);
+        bağlantı.Close();
+        bağlantı.Dispose();
+        return kapandı;
+    }
 }
