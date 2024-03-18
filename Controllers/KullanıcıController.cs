@@ -18,11 +18,11 @@ public class Kullanıcı: ControllerBase
 
         if(KullanıcıFonksiyonları.kullanıcıEkle(kullanıcı))
         {
-            return Ok();
+            return new StatusCodeResult(201); //Created
         }
         else
         {
-            return BadRequest();
+            return new StatusCodeResult(422); //Unprocessable Content
         }
     }
 
@@ -31,24 +31,24 @@ public class Kullanıcı: ControllerBase
     {
         if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(GirilenParola, kimlik, Yeni_KullanıcıAdı))
         {
-            return Ok();
+            return new StatusCodeResult(200); //OK
         }
         else
         {
-            return BadRequest();
+            return new StatusCodeResult(403); //Forbidden
         }
-    } 
+    }
 
     [HttpPut("ParolaDeğiştir")]
     public IActionResult ParolaDeğiştir(string kimlik, string GirilenParola, string Yeni_Parola)
     {
         if(KullanıcıFonksiyonları.ParolaDeğiştir(GirilenParola, kimlik, Yeni_Parola))
         {
-            return Ok();
+            return new StatusCodeResult(200); //OK
         }
         else
         {
-            return BadRequest();
+            return new StatusCodeResult(403); //Forbidden
         }
     }
 
@@ -57,11 +57,11 @@ public class Kullanıcı: ControllerBase
     {
         if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
         {
-            return Ok();
+            return new StatusCodeResult(200); //OK
         }
         else
         {
-            return BadRequest();
+            return new StatusCodeResult(422); //Unprocessable Content
         }
     }
 }

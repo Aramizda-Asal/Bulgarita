@@ -32,11 +32,11 @@ public class Oturum : ControllerBase
 
         if(oturum_açık)
         {
-            return Ok();
+            return new StatusCodeResult(200); //OK
         }
         else
         {
-            return new StatusCodeResult(403); // Forbidden
+            return new StatusCodeResult(403); //Forbidden
         }
     }
 
@@ -47,11 +47,11 @@ public class Oturum : ControllerBase
 
         if (kapandı)
         {
-            return Ok();
+            return new StatusCodeResult(200); //OK
         }
         else
         {
-            return new StatusCodeResult(422); // Unprocessable Content
+            return new StatusCodeResult(422); //Unprocessable Content
         }
     }
 }
