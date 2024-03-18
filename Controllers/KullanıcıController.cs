@@ -11,9 +11,10 @@ namespace bulgarita.Controllers;
 public class Kullanıcı: ControllerBase
 {
     [HttpPost("KullanıcıEkle")]
-    public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola, Kullanıcı_tür Tür)
+    public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola)
     {
         string Kimlik = KullanıcıFonksiyonları.Yeni_Kimlik();
+        Kullanıcı_tür Tür = Kullanıcı_tür.kullanıcı;
         Models.Kullanıcı kullanıcı = new Models.Kullanıcı(Kullanıcı_Adı, E_Posta, Parola, Tür, Kimlik);
 
         if(KullanıcıFonksiyonları.kullanıcıEkle(kullanıcı))
