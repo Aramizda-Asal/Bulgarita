@@ -10,7 +10,7 @@ namespace bulgarita.Controllers;
 
 public class Kullanıcı: ControllerBase
 {
-    [HttpPost("KullanıcıEkle")]
+    [HttpPost("KullanıcıEkle/{Kullanıcı_Adı}/{E_Posta}/{Parola}")]
     public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola)
     {
         string Kimlik = KullanıcıFonksiyonları.Yeni_Kimlik();
@@ -27,7 +27,7 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpPut("KullanıcıAdıDeğiştir")]
+    [HttpPut("KullanıcıAdıDeğiştir/{kimlik}/{GirilenParola}/{Yeni_KullanıcıAdı}")]
     public IActionResult KullancıAdıDeğiştir(string kimlik, string GirilenParola, string Yeni_KullanıcıAdı)
     {
         if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(GirilenParola, kimlik, Yeni_KullanıcıAdı))
@@ -40,7 +40,7 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpPut("ParolaDeğiştir")]
+    [HttpPut("ParolaDeğiştir/{kimlik}/{GirilenParola}/{Yeni_Parola}")]
     public IActionResult ParolaDeğiştir(string kimlik, string GirilenParola, string Yeni_Parola)
     {
         if(KullanıcıFonksiyonları.ParolaDeğiştir(GirilenParola, kimlik, Yeni_Parola))
@@ -53,7 +53,7 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpDelete("KullanıcıSil")]
+    [HttpDelete("KullanıcıSil/{kimlik}")]
     public IActionResult KullanıcıSil(string kimlik)
     {
         if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
