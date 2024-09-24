@@ -26,8 +26,11 @@ CREATE TABLE Bilgi_Doğrulama (
 CREATE TABLE Harita (
     EnlemDrc DOUBLE NOT NULL,
     BoylamDrc DOUBLE NOT NULL,
-    Mevcut_İsim TEXT,
-    Düzenlenmiş_İsim TEXT NOT NULL,
+    Bulgarca_Latin_İsim TEXT NOT NULL,
+    Bulgarca_Kiril_İsim TEXT NOT NULL,
+    Türkçe_İsim TEXT NOT NULL,
+    Osmanlıca_İsim TEXT,
+    Bölge_Türü TEXT NOT NULL,
     Üst_Bölge TEXT,
     Kimlik TEXT NOT NULL 
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
