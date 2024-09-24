@@ -7,7 +7,7 @@ namespace bulgarita.Services;
 
 public static class HaritaFonksiyonları
 {
-    public static List<Harita> BölgelerinBilgileriniAl(string Bölge_Türü)
+    public static List<Harita> BölgelerinBilgileriniAl(string bölge_türü)
     {
         string cs = Bağlantı.bağlantı_dizisi;
 
@@ -19,7 +19,7 @@ public static class HaritaFonksiyonları
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
-        komut.Parameters.AddWithValue("@bölge_türü", Bölge_Türü);
+        komut.Parameters.AddWithValue("@bölge_türü", bölge_türü);
 
         Models.Harita haritaNoktalar = new Models.Harita();
         
@@ -30,21 +30,17 @@ public static class HaritaFonksiyonları
         {
             double EnlemDrc = okuyucu.GetDouble("EnlemDrc");
             double BoylamDrc = okuyucu.GetDouble("BoylamDrc");
-            string Mevcut_İsim = okuyucu.GetString("Mevcut_İsim");
-            //string KirilBulgr_İsim = okuyucu.GetString("KirilBulgr_İsim");
-            //string Türkçe_İsim = okuyucu.GetString("Türkçe_İsim");
+            string Bulgarca_Latin_İsim = okuyucu.GetString("Bulgarca_Latin_İsim");
+            string Bulgarca_Kiril_İsim = okuyucu.GetString("Bulgarca_Kiril_İsim");
+            string Türkçe_İsim = okuyucu.GetString("Türkçe_İsim");
+            string Osmanlıca_İsim = okuyucu.GetString("Osmanlıca_İsim");
+            string Bölge_Türü = okuyucu.GetString("Bölge_Türü");
             string Üst_Bölge = okuyucu.GetString("Üst_Bölge");
-            //string Bölge_Türü = okuyucu.GetString("Bölge_Türü");
             string Kimlik = okuyucu.GetString("Kimlik");
 
             Harita bölge = 
-            new Harita(EnlemDrc,BoylamDrc,Mevcut_İsim,/*KirilBulgr_İsim,Türkçe_İsim,*/Üst_Bölge,Bölge_Türü,Kimlik);
+            new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik);
             BölgeListe.Add(bölge);
-        }
-
-        foreach (Harita bölge in BölgeListe)
-        {
-            Console.WriteLine(bölge.Mevcut_İsim);
         }
 
         okuyucu.Close();
