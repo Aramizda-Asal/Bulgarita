@@ -11,13 +11,13 @@ namespace bulgarita.Controllers;
 public class Oturum : ControllerBase
 {
     [HttpGet("GirişYap/{kullanıcı_adı}/{parola}")]
-    public string[] GirişYap(string kullanıcı_adı, string parola)
+    public IActionResult GirişYap(string kullanıcı_adı, string parola)
     {
         Models.Oturum yeni_oturum = OturumFonksiyonları.OturumBaşlat(kullanıcı_adı, parola);
 
         if (yeni_oturum != null)
         {
-            return yeni_oturum.ToStringArray();
+            return new JsonResult(yeni_oturum, new Newtonsoft.Json.JsonSerializerSettings());
         }
         else
         {
