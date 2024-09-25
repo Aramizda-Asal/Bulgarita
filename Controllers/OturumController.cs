@@ -17,7 +17,8 @@ public class Oturum : ControllerBase
 
         if (yeni_oturum != null)
         {
-            return new JsonResult(yeni_oturum, new Newtonsoft.Json.JsonSerializerSettings());
+            
+            return new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(yeni_oturum));
         }
         else
         {
