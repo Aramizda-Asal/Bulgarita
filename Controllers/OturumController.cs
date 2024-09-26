@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using bulgarita.Models;
 using bulgarita.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 
 namespace bulgarita.Controllers;
 
@@ -13,11 +14,12 @@ public class Oturum : ControllerBase
     [HttpGet("GirişYap/{kullanıcı_adı}/{parola}")]
     public IActionResult GirişYap(string kullanıcı_adı, string parola)
     {
+        kullanıcı_adı = WebUtility.UrlDecode(kullanıcı_adı);
+        parola = WebUtility.UrlDecode(parola);
         Models.Oturum yeni_oturum = OturumFonksiyonları.OturumBaşlat(kullanıcı_adı, parola);
 
         if (yeni_oturum != null)
         {
-            
             return new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(yeni_oturum));
         }
         else

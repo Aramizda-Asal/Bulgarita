@@ -49,7 +49,7 @@ public class Oturum
         RandomNumberGenerator üreteç = RandomNumberGenerator.Create();
         byte[] rastgele = new byte[36];
         üreteç.GetBytes(rastgele);
-        string sonuç = Temizlik.YolaUydur(Convert.ToBase64String(rastgele));
+        string sonuç = WebUtility.UrlEncode(Convert.ToBase64String(rastgele));
         üreteç.Dispose();
 
         if (OturumVT.KimlikVar(sonuç))

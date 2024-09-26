@@ -3,6 +3,7 @@ using bulgarita;
 using System.Security.Cryptography;
 using MySql.Data.MySqlClient;
 using EmailValidation;
+using System.Net;
 
 namespace bulgarita.Services;
 
@@ -117,48 +118,55 @@ public static class KullanıcıFonksiyonları
         }
     }
 
+    public static Models.Kullanıcı kullanıcıAl_Kimlik(string Kimlik)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        Models.Kullanıcı sonuç = kullanıcıAl_Kimlik_Açık(Kimlik, bağlantı);
+        bağlantı.Close(); bağlantı.Dispose();
+
+        return sonuç;
+    }
     public static Models.Kullanıcı kullanıcıAl_Kimlik_Açık(string Kimlik, MySqlConnection açık_bağlantı)
     {
         Kullanıcı_tür tür;
 
         string kod = $"SELECT COUNT(kimlik) from {Bağlantı.Kullanıcı_Tablosu} where kimlik = @veri";
-
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
-
         komut.Parameters.AddWithValue("@veri", Kimlik);
 
         int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+        komut.Dispose();
 
         if(sonuc < 1)
         {
-            komut.Dispose();
             return null;
         }
-        
-        komut.Dispose();
 
         kod = $"SELECT * FROM {Bağlantı.Kullanıcı_Tablosu} WHERE kimlik = @kullanıcı_kimliği";
-
         komut = new MySqlCommand(kod, açık_bağlantı);
-
         komut.Parameters.AddWithValue("@kullanıcı_kimliği",Kimlik);
-        Models.Kullanıcı kullanıcı = new Models.Kullanıcı();
+
+        Models.Kullanıcı kullanıcı = null;
 
         MySqlDataReader okuyucu =  komut.ExecuteReader();
-
-        while(okuyucu.Read())
+        if (okuyucu.HasRows)
         {
-            kullanıcı.Adı = okuyucu["Kullanıcı_Adı"].ToString();
-            kullanıcı.E_posta = okuyucu["E_posta"].ToString();
-            kullanıcı.Şifre = okuyucu["Parola"].ToString();
-            Enum.TryParse<Kullanıcı_tür>(okuyucu["Tür"].ToString(), out tür);
-            kullanıcı.Tür = tür;
-            kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
+            kullanıcı = new Models.Kullanıcı();
+            while(okuyucu.Read())
+            {
+                kullanıcı.Adı = okuyucu["Kullanıcı_Adı"].ToString();
+                kullanıcı.E_posta = okuyucu["E_posta"].ToString();
+                kullanıcı.Şifre = okuyucu["Parola"].ToString();
+                Enum.TryParse<Kullanıcı_tür>(okuyucu["Tür"].ToString(), out tür);
+                kullanıcı.Tür = tür;
+                kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
+                break;
+            }
         }
         
-        okuyucu.Close();
-        
+        okuyucu.Close();        
         komut.Dispose();
+
         return kullanıcı;
     }
 
@@ -316,7 +324,7 @@ public static class KullanıcıFonksiyonları
         byte[] köri = new byte[24];
 
         üreteç.GetBytes(köri);
-        string kimlik = Temizlik.YolaUydur(Convert.ToBase64String(köri));
+        string kimlik = WebUtility.HtmlEncode(Convert.ToBase64String(köri));
         if(!VeriVar("kimlik", kimlik))
         {
             return kimlik;
