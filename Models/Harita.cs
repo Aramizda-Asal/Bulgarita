@@ -30,8 +30,8 @@ public class Harita
     public virtual string[] ToStringArray()
     {
         string[] çıktı = new string[9];
-        çıktı[0] = this.EnlemDrc.ToString();
-        çıktı[1] = this.BoylamDrc.ToString();
+        çıktı[0] = this.EnlemDrc.ToString().Replace(',', '.');
+        çıktı[1] = this.BoylamDrc.ToString().Replace(',', '.');
         çıktı[2] = this.Bulgarca_Latin_İsim;
         çıktı[3] = this.Bulgarca_Kiril_İsim;
         çıktı[4] = this.Türkçe_İsim;
