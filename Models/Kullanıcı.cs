@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace bulgarita.Models;
 
 public enum Kullanıcı_tür{kullanıcı, düzenleyici, allah}
@@ -6,6 +8,7 @@ public class Kullanıcı
 {
     public string Kimlik;
     public string Adı;
+    [JsonIgnore]
     public string Şifre;
     public string E_posta;
     public Kullanıcı_tür Tür;

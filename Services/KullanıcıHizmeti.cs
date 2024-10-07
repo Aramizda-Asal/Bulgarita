@@ -130,7 +130,7 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string kod = $"SELECT COUNT(kimlik) from {Bağlantı.Kullanıcı_Tablosu} where kimlik = @veri";
+        string kod = $"SELECT COUNT(kimlik) from {Bağlantı.Kullanıcı_Tablosu} where kimlik = @veri;";
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
         komut.Parameters.AddWithValue("@veri", Kimlik);
 

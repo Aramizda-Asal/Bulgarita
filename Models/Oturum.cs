@@ -8,7 +8,7 @@ namespace bulgarita.Models;
 
 public class Oturum
 {
-    public string Kullanıcı;
+    public Kullanıcı Kullanıcı;
     public string Kimlik;
     public DateTime Başlangıç;
     public DateTime Bitiş;
@@ -16,7 +16,14 @@ public class Oturum
     public Oturum() {}
     public Oturum(string kullanıcı_kimliği, double süre_saat)
     {
-        Kullanıcı = kullanıcı_kimliği;
+        Kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(kullanıcı_kimliği);
+        Kimlik = YeniKimlik();
+        Başlangıç = DateTime.Now;
+        Bitiş = Başlangıç.AddHours(süre_saat);
+    }
+    public Oturum(Kullanıcı kullanıcı, double süre_saat)
+    {
+        Kullanıcı = kullanıcı;
         Kimlik = YeniKimlik();
         Başlangıç = DateTime.Now;
         Bitiş = Başlangıç.AddHours(süre_saat);
@@ -25,7 +32,7 @@ public class Oturum
     {
         string ayraç = "üğ₺";
         StringBuilder çıktı = new StringBuilder();
-        çıktı.Append(Kullanıcı);
+        çıktı.Append(Kullanıcı.Kimlik);
         çıktı.Append(ayraç);
         çıktı.Append(Kimlik);
         çıktı.Append(ayraç);
@@ -37,7 +44,7 @@ public class Oturum
     public virtual string[] ToStringArray()
     {
         string[] çıktı = new string[4];
-        çıktı[0] = Kullanıcı;
+        çıktı[0] = Kullanıcı.Kimlik;
         çıktı[1] = Kimlik;
         çıktı[2] = Başlangıç.ToString("yyyyMMddHHmmss");
         çıktı[3] = Bitiş.ToString("yyyyMMddHHmmss");

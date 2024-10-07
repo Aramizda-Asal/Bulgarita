@@ -14,17 +14,9 @@ public static class OturumFonksiyonları
 
         if (KullanıcıFonksiyonları.GirişBilgileriDoğru(kullanıcı_adı, parola, bağlantı))
         {
-            StringBuilder komut_metni = new StringBuilder();
-            komut_metni.Append($"SELECT Kimlik FROM {Bağlantı.Kullanıcı_Tablosu} ");
-            komut_metni.Append("WHERE Kullanıcı_Adı = @kullanıcı_adı;");
+            Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı_Açık(kullanıcı_adı, bağlantı);
 
-            MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), bağlantı);
-            komut.Parameters.AddWithValue("@kullanıcı_adı", kullanıcı_adı);
-            string kullanıcı_kimliği = komut.ExecuteScalar().ToString();
-            komut.Dispose();
-            komut_metni.Clear();
-
-            Models.Oturum yeni_oturum = new Oturum(kullanıcı_kimliği, 8);
+            Oturum yeni_oturum = new Oturum(kullanıcı, 8);
             if (OturumVT.OturumKaydet(yeni_oturum, bağlantı))
             {
                 bağlantı.Close();

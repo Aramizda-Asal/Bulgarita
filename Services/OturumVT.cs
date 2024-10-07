@@ -82,7 +82,7 @@ public static class OturumVT
         bağlantı.Open();
 
         MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), bağlantı);
-        komut.Parameters.AddWithValue("@kullanıcı", oturum.Kullanıcı);
+        komut.Parameters.AddWithValue("@kullanıcı", oturum.Kullanıcı.Kimlik);
         komut.Parameters.AddWithValue("@kimlik", oturum.Kimlik);
         komut.Parameters.AddWithValue("@başlangıç", oturum.Başlangıç.ToString("yyyyMMddHHmmss"));
         komut.Parameters.AddWithValue("@bitiş", oturum.Bitiş.ToString("yyyyMMddHHmmss"));
@@ -110,7 +110,7 @@ public static class OturumVT
         komut_metni.Append("VALUES (@kullanıcı, @kimlik, @başlangıç, @bitiş);");
 
         MySqlCommand komut = new MySqlCommand(komut_metni.ToString(), açık_bağlantı);
-        komut.Parameters.AddWithValue("@kullanıcı", oturum.Kullanıcı);
+        komut.Parameters.AddWithValue("@kullanıcı", oturum.Kullanıcı.Kimlik);
         komut.Parameters.AddWithValue("@kimlik", oturum.Kimlik);
         komut.Parameters.AddWithValue("@başlangıç", oturum.Başlangıç.ToString("yyyyMMddHHmmss"));
         komut.Parameters.AddWithValue("@bitiş", oturum.Bitiş.ToString("yyyyMMddHHmmss"));
