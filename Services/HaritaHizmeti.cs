@@ -2,6 +2,7 @@ using bulgarita.Models;
 using bulgarita;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Text;
 
 namespace bulgarita.Services;
 
@@ -48,5 +49,36 @@ public static class HaritaFonksiyonları
         komut.Dispose();
 
         return BölgeListe;
+    }
+
+    public static bool BölgelerinBilgileriniKoy(Harita BölgelerinBilgileri)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+        
+        string kod = 
+        $"INSERT INTO {Bağlantı.Harita_Tablosu} VALUES (@Enlem, @Boylam, @BulgarcaL, @BulgarcaK, @Türkçe, @Osmanlıca, @BölgeTürü, @ÜstBölge, @Kimlik);";
+
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+
+        komut.Parameters.AddWithValue("@Enlem",BölgelerinBilgileri.EnlemDrc);
+        komut.Parameters.AddWithValue("@Boylam",BölgelerinBilgileri.BoylamDrc);
+        komut.Parameters.AddWithValue("@BulgarcaL",BölgelerinBilgileri.Bulgarca_Latin_İsim);
+        komut.Parameters.AddWithValue("@BulgarcaK",BölgelerinBilgileri.Bulgarca_Kiril_İsim);
+        komut.Parameters.AddWithValue("@Türkçe",BölgelerinBilgileri.Türkçe_İsim);
+        komut.Parameters.AddWithValue("@Osmanlıca",BölgelerinBilgileri.Osmanlıca_İsim);
+        komut.Parameters.AddWithValue("@BölgeTürü",BölgelerinBilgileri.Bölge_Türü);
+        komut.Parameters.AddWithValue("@ÜstBölge",BölgelerinBilgileri.Üst_Bölge);
+        komut.Parameters.AddWithValue("@Kimlik",BölgelerinBilgileri.Kimlik);
+        
+        komut.ExecuteNonQuery();
+        komut.Dispose();
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+        
+        return true;
     }
 }
