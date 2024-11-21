@@ -14,8 +14,6 @@ public class Oturum : ControllerBase
     [HttpGet("GirişYap/{kullanıcı_adı}/{parola}")]
     public IActionResult GirişYap(string kullanıcı_adı, string parola)
     {
-        kullanıcı_adı = WebUtility.UrlDecode(kullanıcı_adı);
-        parola = WebUtility.UrlDecode(parola);
         Models.Oturum yeni_oturum = OturumFonksiyonları.OturumBaşlat(kullanıcı_adı, parola);
 
         if (yeni_oturum != null)
@@ -28,14 +26,17 @@ public class Oturum : ControllerBase
         }
     }
 
-    [HttpPost("OturumAçık/{oturum}/{kullanıcı}")]
+    [HttpGet("OturumAçık/{oturum}/{kullanıcı}")]
     public IActionResult OturumAçık(string oturum, string kullanıcı)
-    {
+    {        
         bool oturum_açık = OturumVT.OturumAçık(kullanıcı, oturum);
 
         if(oturum_açık)
         {
-            return new StatusCodeResult(200); //OK
+            Models.Kullanıcı şimdi_kullanan = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(kullanıcı);
+            JsonResult yanıt = new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(şimdi_kullanan));
+            yanıt.StatusCode = 200; //OK
+            return yanıt; 
         }
         else
         {

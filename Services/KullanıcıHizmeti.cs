@@ -121,6 +121,7 @@ public static class KullanıcıFonksiyonları
     public static Models.Kullanıcı kullanıcıAl_Kimlik(string Kimlik)
     {
         MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
         Models.Kullanıcı sonuç = kullanıcıAl_Kimlik_Açık(Kimlik, bağlantı);
         bağlantı.Close(); bağlantı.Dispose();
 
@@ -130,9 +131,9 @@ public static class KullanıcıFonksiyonları
     {
         Kullanıcı_tür tür;
 
-        string kod = $"SELECT COUNT(kimlik) from {Bağlantı.Kullanıcı_Tablosu} where kimlik = @veri;";
+        string kod = $"SELECT COUNT(Kimlik) FROM {Bağlantı.Kullanıcı_Tablosu} WHERE Kimlik = @kimlik;";
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
-        komut.Parameters.AddWithValue("@veri", Kimlik);
+        komut.Parameters.AddWithValue("@kimlik", Kimlik);
 
         int sonuc = int.Parse(komut.ExecuteScalar().ToString());
         komut.Dispose();
