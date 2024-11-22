@@ -18,11 +18,14 @@ public class Oturum : ControllerBase
 
         if (yeni_oturum != null)
         {
-            return new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(yeni_oturum));
+            JsonResult yanıt = new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(yeni_oturum));
+            yanıt.StatusCode = 200; // OK
+            return yanıt;
         }
         else
         {
-            return null;
+            StatusCodeResult yanıt = new StatusCodeResult(403); // Forbidden
+            return yanıt;
         }
     }
 
@@ -35,12 +38,12 @@ public class Oturum : ControllerBase
         {
             Models.Kullanıcı şimdi_kullanan = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(kullanıcı);
             JsonResult yanıt = new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(şimdi_kullanan));
-            yanıt.StatusCode = 200; //OK
+            yanıt.StatusCode = 200; // OK
             return yanıt; 
         }
         else
         {
-            return new StatusCodeResult(403); //Forbidden
+            return new StatusCodeResult(403); // Forbidden
         }
     }
 
@@ -51,11 +54,11 @@ public class Oturum : ControllerBase
 
         if (kapandı)
         {
-            return new StatusCodeResult(200); //OK
+            return new StatusCodeResult(200); // OK
         }
         else
         {
-            return new StatusCodeResult(422); //Unprocessable Content
+            return new StatusCodeResult(422); // Unprocessable Content
         }
     }
 }
