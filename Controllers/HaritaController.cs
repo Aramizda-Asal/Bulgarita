@@ -25,18 +25,30 @@ public class Harita : ControllerBase
         }
         return BölgeListeDizi;
     }
-    [HttpPost("NoktaKoy/{bölge_bilgileri}")]
-    public IActionResult NoktaKoy(string bölge_bilgileri)
+    [HttpPost("NoktaKoy/{EnlemDrc}/{BoylamDrc}/{Bulgarca_Latin_İsim}/{Bulgarca_Kiril_İsim}/{Türkçe_İsim}/{Osmanlıca_İsim}/{Bölge_Türü}/{Üst_Bölge}/{Kimlik}")]
+    public IActionResult NoktaKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
+                                  string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik)
     {
-        bölge_bilgileri = WebUtility.UrlDecode(bölge_bilgileri);
-        Models.Harita bölge_bilgileriHarita = new Models.Harita(bölge_bilgileri);
-        if(HaritaFonksiyonları.BölgelerinBilgileriniKoy(bölge_bilgileriHarita) == true)
+        if(HaritaFonksiyonları.BölgeninBilgileriniKoy(EnlemDrc, BoylamDrc, Bulgarca_Latin_İsim, Bulgarca_Kiril_İsim, Türkçe_İsim, Osmanlıca_İsim, Bölge_Türü, Üst_Bölge, Kimlik))
         {
-            return new StatusCodeResult(200);
+            return new StatusCodeResult(201); //Created
         }
         else
         {
-            return new StatusCodeResult(403);
+            return new StatusCodeResult(422); //Unprocessable Content
+        }
+    }
+
+    [HttpPatch("NoktaBilgisiGüncelle/{kimlik}/{veri_sütunu}/{yeni_veri}")]
+    public IActionResult NoktaBilgisiGüncelle(string kimlik, string veri_sütunu, string yeni_veri)
+    {
+        if(HaritaFonksiyonları.BölgeBilgileriniDeğis(kimlik, veri_sütunu, yeni_veri))
+        {
+            return new StatusCodeResult(200); //OK
+        }
+        else
+        {
+            return new StatusCodeResult(422); //Unprocessable Content
         }
     }
 }
