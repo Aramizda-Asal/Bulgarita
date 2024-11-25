@@ -3,6 +3,7 @@ using bulgarita.Services;
 using bulgarita.Models;
 using bulgarita;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 
 namespace bulgarita.Controllers;
 
@@ -23,5 +24,19 @@ public class Harita : ControllerBase
             index++;
         }
         return BölgeListeDizi;
+    }
+    [HttpPost("NoktaKoy/{bölge_bilgileri}")]
+    public IActionResult NoktaKoy(string bölge_bilgileri)
+    {
+        bölge_bilgileri = WebUtility.UrlDecode(bölge_bilgileri);
+        Models.Harita bölge_bilgileriHarita = new Models.Harita(bölge_bilgileri);
+        if(HaritaFonksiyonları.BölgelerinBilgileriniKoy(bölge_bilgileriHarita) == true)
+        {
+            return new StatusCodeResult(200);
+        }
+        else
+        {
+            return new StatusCodeResult(403);
+        }
     }
 }
