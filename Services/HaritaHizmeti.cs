@@ -51,34 +51,71 @@ public static class HaritaFonksiyonları
         return BölgeListe;
     }
 
-    public static bool BölgelerinBilgileriniKoy(Harita BölgelerinBilgileri)
+    public static bool BölgeninBilgileriniKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
+                                                string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik)
     {
         string cs = Bağlantı.bağlantı_dizisi;
 
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
-        
-        string kod = 
-        $"INSERT INTO {Bağlantı.Harita_Tablosu} VALUES (@Enlem, @Boylam, @BulgarcaL, @BulgarcaK, @Türkçe, @Osmanlıca, @BölgeTürü, @ÜstBölge, @Kimlik);";
 
-        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        try
+        {
+            string kod = 
+            $"INSERT INTO {Bağlantı.Harita_Tablosu} VALUES (@Enlem, @Boylam, @BulgarcaL, @BulgarcaK, @Türkçe, @Osmanlıca, @BölgeTürü, @ÜstBölge, @Kimlik);";
 
-        komut.Parameters.AddWithValue("@Enlem",BölgelerinBilgileri.EnlemDrc);
-        komut.Parameters.AddWithValue("@Boylam",BölgelerinBilgileri.BoylamDrc);
-        komut.Parameters.AddWithValue("@BulgarcaL",BölgelerinBilgileri.Bulgarca_Latin_İsim);
-        komut.Parameters.AddWithValue("@BulgarcaK",BölgelerinBilgileri.Bulgarca_Kiril_İsim);
-        komut.Parameters.AddWithValue("@Türkçe",BölgelerinBilgileri.Türkçe_İsim);
-        komut.Parameters.AddWithValue("@Osmanlıca",BölgelerinBilgileri.Osmanlıca_İsim);
-        komut.Parameters.AddWithValue("@BölgeTürü",BölgelerinBilgileri.Bölge_Türü);
-        komut.Parameters.AddWithValue("@ÜstBölge",BölgelerinBilgileri.Üst_Bölge);
-        komut.Parameters.AddWithValue("@Kimlik",BölgelerinBilgileri.Kimlik);
-        
-        komut.ExecuteNonQuery();
-        komut.Dispose();
+            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
-        bağlantı.Close();
-        bağlantı.Dispose();
-        
-        return true;
+            komut.Parameters.AddWithValue("@Enlem",EnlemDrc);
+            komut.Parameters.AddWithValue("@Boylam",BoylamDrc);
+            komut.Parameters.AddWithValue("@BulgarcaL",Bulgarca_Latin_İsim);
+            komut.Parameters.AddWithValue("@BulgarcaK",Bulgarca_Kiril_İsim);
+            komut.Parameters.AddWithValue("@Türkçe",Türkçe_İsim);
+            komut.Parameters.AddWithValue("@Osmanlıca",Osmanlıca_İsim);
+            komut.Parameters.AddWithValue("@BölgeTürü",Bölge_Türü);
+            komut.Parameters.AddWithValue("@ÜstBölge",Üst_Bölge);
+            komut.Parameters.AddWithValue("@Kimlik",Kimlik);
+            
+            komut.ExecuteNonQuery();
+            komut.Dispose();
+
+            bağlantı.Close();
+            bağlantı.Dispose();
+            
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
+    }
+
+    public static bool BölgeBilgileriniDeğis(string kimlik, string veri_sütunu, string yeni_veri)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        try 
+        {
+            string kod = $"Update {Bağlantı.Harita_Tablosu} SET {veri_sütunu} = @yeni_veri WHERE Kimlik = @kimlik";
+
+            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+
+            komut.Parameters.AddWithValue("@yeni_veri", yeni_veri);
+            komut.Parameters.AddWithValue("@kimlik", kimlik);
+
+            komut.ExecuteNonQuery();
+            komut.Dispose();
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
     }
 }
