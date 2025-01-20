@@ -118,4 +118,18 @@ public static class HaritaFonksiyonları
         }
 
     }
+
+    public static bool VeriVarAçık(string sütun, string veri, MySqlConnection açık_bağlantı)
+    {
+        string kod = $"SELECT COUNT({sütun}) FROM {Bağlantı.Harita_Tablosu} WHERE {sütun} = @veri";
+
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
+
+        komut.Parameters.AddWithValue("@veri", veri);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+
+        komut.Dispose();
+        return (sonuc >= 1);
+    }
 }
