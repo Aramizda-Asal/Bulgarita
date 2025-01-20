@@ -30,4 +30,34 @@ public static class FavorilerFonksiyonları
         bağlantı.Dispose();
 
     }
+
+    public static bool FavoriEkle(string Kullanıcı_Kimliği, string Konum_Kimliği)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+        
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        if(KullanıcıFonksiyonları.VeriVarAçık("Kimlik", Kullanıcı_Kimliği, bağlantı) && HaritaFonksiyonları.VeriVarAçık("Kimlik", Konum_Kimliği, bağlantı))
+        {
+            string kod = $"INSERT INTO {Bağlantı.Favoriler_Tablosu}(Kullanıcı, Konum_Kimliği) VALUES(@kullanıcı_kimliği, @konum_kimliği);";
+
+            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+
+            komut.Parameters.AddWithValue("@kullanıcı_kimliği", Kullanıcı_Kimliği);
+            komut.Parameters.AddWithValue("@konum_kimliği", Konum_Kimliği);
+
+            komut.ExecuteNonQuery();
+            komut.Dispose();
+
+            bağlantı.Close();
+            bağlantı.Dispose();
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
