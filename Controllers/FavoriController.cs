@@ -8,7 +8,7 @@ namespace bulgarita.Controllers;
 
 public class Favori : ControllerBase
 {
-    [HttpPost("KullanıcıEkle/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
+    [HttpPost("FavoriEkle/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
     public IActionResult FavoriEkle(string Kullanıcı_Kimliği, string Konum_Kimliği)
     {
 
