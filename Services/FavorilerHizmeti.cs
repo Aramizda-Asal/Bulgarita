@@ -31,6 +31,26 @@ public static class FavorilerFonksiyonları
 
     }
 
+    public static bool SatırVar(string kullanıcı_kimliği, string konum_kimliği)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+        
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        string kod = $"SELECT COUNT(Konum_Kimliği) FROM {Bağlantı.Favoriler_Tablosu} WHERE Kullanıcı = @kullanıcı_kimliği AND Konum_Kimliği = @konum_kimliği";
+
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+
+        komut.Parameters.AddWithValue("@kullanıcı_kimliği", kullanıcı_kimliği);
+        komut.Parameters.AddWithValue("@konum_kimliği", konum_kimliği);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+
+        komut.Dispose();
+        return (sonuc >= 1);
+    }
+
     public static bool SatırVarAçık(string kullanıcı_kimliği, string konum_kimliği, MySqlConnection açık_bağlantı)
     {
         string kod = $"SELECT COUNT(Konum_Kimliği) FROM {Bağlantı.Favoriler_Tablosu} WHERE Kullanıcı = @kullanıcı_kimliği AND Konum_Kimliği = @konum_kimliği";
