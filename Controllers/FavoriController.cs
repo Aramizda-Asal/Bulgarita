@@ -21,4 +21,18 @@ public class Favori : ControllerBase
             return new StatusCodeResult(422); //Unprocessable Content
         }
     }
+
+    [HttpDelete("FavorilerdenCikar/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
+    public IActionResult FavorilerdenCikar(string Kullanıcı_Kimliği, string Konum_Kimliği)
+    {
+
+        if(FavorilerFonksiyonları.FavorilerdenCikar(Kullanıcı_Kimliği, Konum_Kimliği))
+        {
+            return new StatusCodeResult(201); //Created
+        }
+        else
+        {
+            return new StatusCodeResult(422); //Unprocessable Content
+        }
+    }
 }
