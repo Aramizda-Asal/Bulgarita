@@ -36,17 +36,17 @@ public class Favori : ControllerBase
         }
     }
 
-        [HttpPost("SatirVarMi/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
-        public IActionResult SatirVarMi(string Kullanıcı_Kimliği, string Konum_Kimliği)
-        {
+    [HttpPost("SatirVarMi/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
+    public IActionResult SatirVarMi(string Kullanıcı_Kimliği, string Konum_Kimliği)
+    {
 
-            if(FavorilerFonksiyonları.SatırVar(Kullanıcı_Kimliği, Konum_Kimliği))
-            {
-                return new StatusCodeResult(200);
-            }
-            else
-            {
-                return new StatusCodeResult(400);
-            }
+        if(FavorilerFonksiyonları.SatırVar(Kullanıcı_Kimliği, Konum_Kimliği))
+        {
+            return new StatusCodeResult(200);
         }
+        else
+        {
+            return new StatusCodeResult(400);
+        }
+    }
 }
