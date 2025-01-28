@@ -282,34 +282,60 @@ public static class KullanıcıFonksiyonları
         return çıktı;
     }
 
-    public static bool ParolaDeğiştir(string GirilenParola, string Kimlik, string Yeni_Parola)
+    /**
+    * <summary>
+    * Kullanıcının parolasını değiştirebilmesini sağlar.
+    * </summary>
+    * <remarks>
+    * <para>
+    * Kullanıcının girdiği mevcut parola doğruysa
+    * yeni parola karılıp veri tabanına kaydedilir.
+    * </para>
+    * <para>
+    * <see cref="bulgarita.Controllers.Kullanıcı.ParolaDeğiştir(string, string, string)">API Denetçisi</see>
+    * üzerinden kullanılması için tasarlanmıştır.
+    * </para>
+    * </remarks>
+    * 
+    * <param name="KullanıcıKimliği">Parolası değiştirilecek kullanıcının kimliği</param>
+    * <param name="MevcutParola">Kullanıcının mevcut parolasının karılmamış hâli</param>
+    * <param name="YeniParola">Kullanıcının yeni parolasının karılmamış hâli</param>
+    *
+    * <returns>
+    * Parola başarıyla değiştirilirse <c>true</c>,
+    * değiştirilmezse <c>false</c>.
+    * </returns>
+    *
+    * <seealso cref="bulgarita.Controllers.Kullanıcı.ParolaDeğiştir(string, string, string)"/>
+    */
+    public static bool ParolaDeğiştir(string KullanıcıKimliği,
+                                      string MevcutParola, string YeniParola)
     {
         MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
         bağlantı.Open();
 
-        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(Kimlik,bağlantı);
+        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(KullanıcıKimliği, bağlantı);
         bool çıktı = false;
 
-        Yeni_Parola = Parolalar.KarılmışParola(Yeni_Parola,Parolalar.Tuz());
-
-        if(Parolalar.ParolaDoğru(GirilenParola,kullanıcı.Şifre))
+        if(Parolalar.ParolaDoğru(MevcutParola, kullanıcı.Şifre))
         {
             try
             {
-                string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} SET Parola = @yeni_veri WHERE Kimlik = @kimlik";
+                YeniParola = Parolalar.KarılmışParola(YeniParola, Parolalar.Tuz());
+                string kod = $"UPDATE {Bağlantı.Kullanıcı_Tablosu} " +
+                            "SET Parola = @yeni_veri WHERE Kimlik = @kimlik;";
 
-                MySqlCommand komut = new MySqlCommand(kod,bağlantı);
-                komut.Parameters.AddWithValue("@kimlik",Kimlik);
-                komut.Parameters.AddWithValue("@yeni_veri",Yeni_Parola);
+                MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+                komut.Parameters.AddWithValue("@kimlik", KullanıcıKimliği);
+                komut.Parameters.AddWithValue("@yeni_veri", YeniParola);
 
                 komut.ExecuteNonQuery();
                 komut.Dispose();
 
                 çıktı = true;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
                 çıktı = false;
             }
         }

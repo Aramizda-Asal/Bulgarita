@@ -40,10 +40,39 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpPut("ParolaDeğiştir/{kimlik}/{GirilenParola}/{Yeni_Parola}")]
-    public IActionResult ParolaDeğiştir(string kimlik, string GirilenParola, string Yeni_Parola)
+    /**
+    * <summary>
+    * Kullanıcıların kendi parolalarını değiştirebilmesi için API denetçisi.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP PATCH türünde bir metoddur. Yalnızca durum kodu döndürür.
+    * </para>
+    * <para>
+    * Kullanıcı kimliği ile şu anki parola eşleşiyorsa
+    * <see cref="bulgarita.Services.KullanıcıFonksiyonları.ParolaDeğiştir(string, string, string)">
+    * yeni parolayı karıp veri tabanına kaydeden hizmeti
+    * </see>
+    * kullanır.
+    * </para>
+    * </remarks>
+    *
+    * <param name="Kullanıcı">Parolasının değiştirecek kullanıcının kimliği</param>
+    * <param name="MevcutParola">Kullanıcının şu anki parolasının karılmamış hâli</param>
+    * <param name="YeniParola">Kullanıcının yeni belirlediği parola (karılmamış)</param>
+    *
+    * <returns>
+    * Parola başarıyla değiştirilirse <c>200 OK</c>,
+    * değiştirilmezse <c>403 Forbidden</c>.
+    * </returns>
+    *
+    * <seealso cref="bulgarita.Services.KullanıcıFonksiyonları.ParolaDeğiştir(string, string, string)"/>
+    */
+    [HttpPatch("ParolaDeğiştir/{Kullanıcı}/{MevcutParola}/{YeniParola}/")]
+    public IActionResult ParolaDeğiştir(string Kullanıcı, string MevcutParola,
+                                        string YeniParola)
     {
-        if(KullanıcıFonksiyonları.ParolaDeğiştir(GirilenParola, kimlik, Yeni_Parola))
+        if(KullanıcıFonksiyonları.ParolaDeğiştir(Kullanıcı, MevcutParola, YeniParola))
         {
             return new StatusCodeResult(200); //OK
         }
