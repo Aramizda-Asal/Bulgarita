@@ -351,7 +351,7 @@ public static class KullanıcıFonksiyonları
         byte[] köri = new byte[24];
 
         üreteç.GetBytes(köri);
-        string kimlik = WebUtility.HtmlEncode(Convert.ToBase64String(köri));
+        string kimlik = Convert.ToBase64String(köri);
         if(!VeriVar("kimlik", kimlik))
         {
             return kimlik;
