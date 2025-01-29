@@ -4,23 +4,33 @@ CREATE TABLE Kullanıcı (
     E_Posta TEXT NOT NULL,
     Parola TEXT NOT NULL,
     Tür TEXT NOT NULL,
-    Kimlik TEXT NOT NULL
+    Kimlik CHAR(32) NOT NULL PRIMARY KEY
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE Oturum (
-    Kullanıcı TEXT NOT NULL,
-    Kimlik TEXT NOT NULL,
+    Kullanıcı CHAR(32) NOT NULL,
+    Kimlik CHAR(48) NOT NULL PRIMARY KEY,
     Başlangıç TEXT NOT NULL,
-    Bitiş TEXT NOT NULL
+    Bitiş TEXT NOT NULL,
+    CONSTRAINT oturum_iyeliği
+        FOREIGN KEY (Kullanıcı)
+        REFERENCES Kullanıcı(Kimlik)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE Bilgi_Doğrulama (
-    Kimlik TEXT NOT NULL,
-    Kullanıcı TEXT NOT NULL,
+    Kimlik CHAR(48) NOT NULL PRIMARY KEY,
+    Kullanıcı CHAR(32) NOT NULL,
     Başlangıç TEXT NOT NULL,
     Bitiş TEXT NOT NULL,
     Bağlantı TEXT NOT NULL,
-    Doğrulandı BOOLEAN NOT NULL DEFAULT FALSE
+    Doğrulandı BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT doğrulama_iyeliği
+        FOREIGN KEY (Kullanıcı)
+        REFERENCES Kullanıcı(Kimlik)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE Harita (
@@ -31,11 +41,38 @@ CREATE TABLE Harita (
     Türkçe_İsim TEXT NOT NULL,
     Osmanlıca_İsim TEXT,
     Bölge_Türü TEXT NOT NULL,
-    Üst_Bölge TEXT,
-    Kimlik TEXT NOT NULL 
+    Üst_Bölge CHAR(32),
+    Kimlik CHAR(32) NOT NULL PRIMARY KEY,
+    CONSTRAINT üst_bölge_kısıtı
+        FOREIGN KEY (Üst_Bölge)
+        REFERENCES Harita(Kimlik)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE Favoriler (
-    Kullanıcı TEXT NOT NULL,
-    Konum_Kimliği TEXT NOT NULL
+    Kullanıcı CHAR(32) NOT NULL,
+    Konum_Kimliği CHAR(32) NOT NULL,
+    PRIMARY KEY (Kullanıcı, Konum_Kimliği),
+    CONSTRAINT favori_iyeliği
+        FOREIGN KEY (Kullanıcı)
+        REFERENCES Kullanıcı(Kimlik)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT favori_konumu
+        FOREIGN KEY (Konum_Kimliği)
+        REFERENCES Harita(Kimlik)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
+
+CREATE TABLE Roller (
+    Kullanıcı CHAR(32) NOT NULL,
+    Rol CHAR(32) NOT NULL,
+    PRIMARY KEY (Kullanıcı, Rol),
+    CONSTRAINT rol_iyeliği
+        FOREIGN KEY (Kullanıcı)
+        REFERENCES Kullanıcı(Kimlik)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
