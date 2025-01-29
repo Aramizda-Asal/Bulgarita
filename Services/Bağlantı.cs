@@ -16,5 +16,6 @@ internal class Bağlantı
     internal static string Harita_Tablosu = tablolar[2];
     internal static string Favoriler_Tablosu = tablolar[3];
     internal static string Bilgi_Doğrulama_Tablosu = tablolar[4];
+    internal static string Roller_Tablosu = tablolar[5];
 }
  
