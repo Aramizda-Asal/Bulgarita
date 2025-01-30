@@ -247,32 +247,58 @@ public static class KullanıcıFonksiyonları
         }
     }
 
-    public static bool KullanıcıAdıDeğiştir(string GirilenParola, string Kimlik, string Yeni_KullanıcıAdı)
+    /**
+    * <summary>
+    * Kullanıcının kullanıcı adını değiştirebilmesini sağlar.
+    * </summary>
+    * <remarks>
+    * <para>
+    * Kullanıcının girdiği parola doğruysa kullanıcı adı değiştirilir.
+    * </para>
+    * </remarks>
+    *
+    * <param name="KullanıcıKimliği">Adı değiştirilecek kullanıcının kimliği</param>
+    * <param name="GirilenParola">Kullanıcının karılmamış parolası</param>
+    * <param name="YeniKullanıcıAdı">Kullanıcının yeni kullanıcı adı</param>
+    *
+    * <returns>
+    * Kullanıcı adı başarıyla değiştirilirse <c>true</c>,
+    * değiştirilmezse <c>false</c>.
+    * </returns>
+    *
+    * <seealso cref="bulgarita.Controllers.Kullanıcı.KullanıcıAdıDeğiştir(string, string, string)"/>
+    */
+    public static bool KullanıcıAdıDeğiştir(string KullanıcıKimliği,
+                                            string GirilenParola,
+                                            string YeniKullanıcıAdı)
     {
         MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
         bağlantı.Open();
 
-        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(Kimlik,bağlantı);
+        Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(KullanıcıKimliği,
+                                         bağlantı);
+
         bool çıktı = false;
 
-        if(Parolalar.ParolaDoğru(GirilenParola,kullanıcı.Şifre))
+        if(Parolalar.ParolaDoğru(GirilenParola, kullanıcı.Şifre))
         {
             try
             {
-                string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} SET kullanıcı_adı = @yeni_veri WHERE Kimlik = @kimlik";
+                string kod = $"Update {Bağlantı.Kullanıcı_Tablosu} " +
+                             "SET Kullanıcı_Adı = @yeni_veri " +
+                             "WHERE Kimlik = @kimlik;";
 
                 MySqlCommand komut = new MySqlCommand(kod,bağlantı);
-                komut.Parameters.AddWithValue("@kimlik",Kimlik);
-                komut.Parameters.AddWithValue("@yeni_veri",Yeni_KullanıcıAdı);
+                komut.Parameters.AddWithValue("@kimlik", KullanıcıKimliği);
+                komut.Parameters.AddWithValue("@yeni_veri", YeniKullanıcıAdı);
 
                 komut.ExecuteNonQuery();
                 komut.Dispose();
 
                 çıktı = true;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
                 çıktı = false;
             }
         }

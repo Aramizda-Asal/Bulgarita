@@ -27,10 +27,32 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpPut("KullanıcıAdıDeğiştir/{kimlik}/{GirilenParola}/{Yeni_KullanıcıAdı}")]
-    public IActionResult KullancıAdıDeğiştir(string kimlik, string GirilenParola, string Yeni_KullanıcıAdı)
+    /**
+    * <summary>
+    * Kullanıcıların kendi kullanıcı adlarını değiştirebilmeleri için API denetçisi.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP PATCH türünde bir metoddur. Yalnızca durum kodu döndürür.
+    * </para>
+    * <para>
+    * <see cref="bulgarita.Services.KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(string, string, string)">
+    * Kullanıcı kimliği ile parola eşleşiyorsa kullanıcı adını
+    * güncelleyen hizmeti</see> kullanır.
+    * </para>
+    * </remarks>
+    *
+    * <param name="Kullanıcı">Kullanıcı adını değiştirecek kullanıcının kimliği</param>
+    * <param name="Parola">Kimlik doğrulama amacıyla kullanıcının karılmamış parolası</param>
+    * <param name="YeniKullanıcıAdı">Kullanıcının yeni belirlediği kullanıcı adı</param>
+    *
+    * <seealso cref="bulgarita.Services.KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(string, string, string)"/>
+    */
+    [HttpPatch("KullanıcıAdıDeğiştir/{Kullanıcı}/{Parola}/{YeniKullanıcıAdı}/")]
+    public IActionResult KullanıcıAdıDeğiştir(string Kullanıcı, string Parola,
+                                              string YeniKullanıcıAdı)
     {
-        if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(GirilenParola, kimlik, Yeni_KullanıcıAdı))
+        if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(Kullanıcı, Parola, YeniKullanıcıAdı))
         {
             return new StatusCodeResult(200); //OK
         }
