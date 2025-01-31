@@ -277,6 +277,11 @@ public static class KullanıcıFonksiyonları
 
         Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(KullanıcıKimliği,
                                          bağlantı);
+        
+        if (kullanıcı == null)
+        {
+            return false;
+        }
 
         bool çıktı = false;
 
@@ -341,6 +346,12 @@ public static class KullanıcıFonksiyonları
         bağlantı.Open();
 
         Models.Kullanıcı kullanıcı = kullanıcıAl_Kimlik_Açık(KullanıcıKimliği, bağlantı);
+        
+        if (kullanıcı == null)
+        {
+            return false;
+        }
+
         bool çıktı = false;
 
         if(Parolalar.ParolaDoğru(MevcutParola, kullanıcı.Şifre))

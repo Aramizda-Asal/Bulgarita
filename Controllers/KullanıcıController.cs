@@ -15,7 +15,12 @@ public class Kullanıcı: ControllerBase
     {
         string Kimlik = KullanıcıFonksiyonları.Yeni_Kimlik();
         Kullanıcı_tür Tür = Kullanıcı_tür.kullanıcı;
-        Models.Kullanıcı kullanıcı = new Models.Kullanıcı(Kullanıcı_Adı, E_Posta, Parola, Tür, Kimlik);
+        Models.Kullanıcı kullanıcı = new Models.Kullanıcı(
+                Uri.UnescapeDataString(Kullanıcı_Adı),
+                Uri.UnescapeDataString(E_Posta),
+                Uri.UnescapeDataString(Parola),
+                Tür,
+                Kimlik );
 
         if(KullanıcıFonksiyonları.kullanıcıEkle(kullanıcı))
         {
@@ -52,6 +57,10 @@ public class Kullanıcı: ControllerBase
     public IActionResult KullanıcıAdıDeğiştir(string Kullanıcı, string Parola,
                                               string YeniKullanıcıAdı)
     {
+        Kullanıcı = Uri.UnescapeDataString(Kullanıcı);
+        Parola = Uri.UnescapeDataString(Parola);
+        YeniKullanıcıAdı = Uri.UnescapeDataString(YeniKullanıcıAdı);
+
         if(KullanıcıFonksiyonları.KullanıcıAdıDeğiştir(Kullanıcı, Parola, YeniKullanıcıAdı))
         {
             return new StatusCodeResult(200); //OK
@@ -94,6 +103,10 @@ public class Kullanıcı: ControllerBase
     public IActionResult ParolaDeğiştir(string Kullanıcı, string MevcutParola,
                                         string YeniParola)
     {
+        Kullanıcı = Uri.UnescapeDataString(Kullanıcı);
+        MevcutParola = Uri.UnescapeDataString(MevcutParola);
+        YeniParola = Uri.UnescapeDataString(YeniParola);
+
         if(KullanıcıFonksiyonları.ParolaDeğiştir(Kullanıcı, MevcutParola, YeniParola))
         {
             return new StatusCodeResult(200); //OK
