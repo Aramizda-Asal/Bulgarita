@@ -79,4 +79,21 @@ public static class RollerFonksiyonları
         komut.Dispose();
         return sonuc >= 1;
     }
+
+    public static bool RolDüzenlemeYetkisineSahip(string Kullanıcı_Kimliği)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+        
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Rol Atayıcı/Alıcı");
+
+        bool YetkiVar = SatırVar_AçıkBağlantı(roller, bağlantı);
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return YetkiVar;
+    }
 }
