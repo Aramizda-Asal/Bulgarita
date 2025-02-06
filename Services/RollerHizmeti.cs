@@ -80,20 +80,28 @@ public static class RollerFonksiyonları
         return sonuc >= 1;
     }
 
-    public static bool RolDüzenlemeYetkisineSahip(string Kullanıcı_Kimliği)
+    public static bool SatırVar(Models.Roller roller)
     {
         string cs = Bağlantı.bağlantı_dizisi;
         
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Rol Atayıcı/Alıcı");
+        string kod = $"SELECT COUNT(Rol) FROM {Bağlantı.Roller_Tablosu} ";
+        kod += $"WHERE Kullanıcı = @kullanıcı_kimliği AND Rol = @rol";
 
-        bool YetkiVar = SatırVar_AçıkBağlantı(roller, bağlantı);
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+
+        komut.Parameters.AddWithValue("@kullanıcı_kimliği", roller.Kullanıcı);
+        komut.Parameters.AddWithValue("@rol", roller.Rol);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+
+        komut.Dispose();
 
         bağlantı.Close();
         bağlantı.Dispose();
 
-        return YetkiVar;
+        return sonuc >= 1;
     }
 }

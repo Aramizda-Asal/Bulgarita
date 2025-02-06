@@ -15,7 +15,8 @@ public class Roller : ControllerBase
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolVerici_KullanıcıK);
+        Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
         bool OturumAçık = OturumVT.OturumAçık(RolVerici_KullanıcıK, RolVerici_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -44,7 +45,8 @@ public class Roller : ControllerBase
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolVerici_KullanıcıK);
+        Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
         bool OturumAçık = OturumVT.OturumAçık(RolVerici_KullanıcıK, RolVerici_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -73,7 +75,8 @@ public class Roller : ControllerBase
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolVerici_KullanıcıK);
+        Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
         bool OturumAçık = OturumVT.OturumAçık(RolVerici_KullanıcıK, RolVerici_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -102,7 +105,8 @@ public class Roller : ControllerBase
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolVerici_KullanıcıK);
+        Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
         bool OturumAçık = OturumVT.OturumAçık(RolVerici_KullanıcıK, RolVerici_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -131,7 +135,8 @@ public class Roller : ControllerBase
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolVerici_KullanıcıK);
+        Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
         bool OturumAçık = OturumVT.OturumAçık(RolVerici_KullanıcıK, RolVerici_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -160,7 +165,8 @@ public class Roller : ControllerBase
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolAlıcı_KullanıcıK);
+        Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -189,7 +195,8 @@ public class Roller : ControllerBase
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolAlıcı_KullanıcıK);
+        Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -218,7 +225,8 @@ public class Roller : ControllerBase
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolAlıcı_KullanıcıK);
+        Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -247,7 +255,8 @@ public class Roller : ControllerBase
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolAlıcı_KullanıcıK);
+        Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
@@ -276,7 +285,8 @@ public class Roller : ControllerBase
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
-        bool YetkiVar = RollerFonksiyonları.RolDüzenlemeYetkisineSahip(RolAlıcı_KullanıcıK);
+        Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
