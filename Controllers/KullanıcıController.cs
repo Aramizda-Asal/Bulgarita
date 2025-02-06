@@ -117,16 +117,31 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpDelete("KullanıcıSil/{kimlik}")]
-    public IActionResult KullanıcıSil(string kimlik)
+    [HttpDelete("KullanıcıSil/{kimlik}/{Silici_KullanıcıK}/{Silici_OturumK}")]
+    public IActionResult KullanıcıSil(string kimlik, string Silici_KullanıcıK, string Silici_OturumK)
     {
-        if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
+        kimlik = Uri.UnescapeDataString(kimlik);
+        Silici_KullanıcıK = Uri.UnescapeDataString(Silici_KullanıcıK);
+        Silici_OturumK = Uri.UnescapeDataString(Silici_OturumK);
+
+        Models.Roller rol_KullanıcıSilici = new Models.Roller(Silici_KullanıcıK, "Kullanıcı Silici");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_KullanıcıSilici);
+        bool OturumAçık = OturumVT.OturumAçık(Silici_KullanıcıK, Silici_OturumK);
+
+        if(YetkiVar && OturumAçık)
         {
-            return new StatusCodeResult(200); //OK
+            if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
+            {
+                return new StatusCodeResult(200); //OK
+            }
+            else
+            {
+                return new StatusCodeResult(422); //Unprocessable Content
+            }
         }
         else
         {
-            return new StatusCodeResult(422); //Unprocessable Content
+            return new StatusCodeResult(403); //Forbidden
         }
     }
 }
