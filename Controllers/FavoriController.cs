@@ -11,7 +11,8 @@ public class Favori : ControllerBase
     [HttpPost("FavoriEkle/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
     public IActionResult FavoriEkle(string Kullanıcı_Kimliği, string Konum_Kimliği)
     {
-
+        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
+        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
         if(FavorilerFonksiyonları.FavoriEkle(Kullanıcı_Kimliği, Konum_Kimliği))
         {
             return new StatusCodeResult(201); //Created
@@ -25,7 +26,8 @@ public class Favori : ControllerBase
     [HttpDelete("FavorilerdenCikar/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
     public IActionResult FavorilerdenCikar(string Kullanıcı_Kimliği, string Konum_Kimliği)
     {
-
+        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
+        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
         if(FavorilerFonksiyonları.FavorilerdenCikar(Kullanıcı_Kimliği, Konum_Kimliği))
         {
             return new StatusCodeResult(201); //Created
@@ -39,7 +41,8 @@ public class Favori : ControllerBase
     [HttpPost("SatirVarMi/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
     public IActionResult SatirVarMi(string Kullanıcı_Kimliği, string Konum_Kimliği)
     {
-
+        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
+        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
         if(FavorilerFonksiyonları.SatırVar(Kullanıcı_Kimliği, Konum_Kimliği))
         {
             return new StatusCodeResult(200);
