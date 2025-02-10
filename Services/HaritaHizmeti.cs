@@ -132,4 +132,42 @@ public static class HaritaFonksiyonları
         komut.Dispose();
         return (sonuc >= 1);
     }
+
+    public static bool BölgeSil(string Kimlik)
+    {
+        try
+        {
+            MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+            bağlantı.Open();
+            
+            if(!VeriVarAçık("Üst_Bölge", Kimlik, bağlantı))
+            {
+                string kod = $"DELETE FROM {Bağlantı.Harita_Tablosu} WHERE Kimlik = @kimlik;";
+
+                MySqlCommand komut = new MySqlCommand(kod,bağlantı);
+                komut.Parameters.AddWithValue("@kimlik",Kimlik);
+
+                komut.ExecuteNonQuery();
+
+                komut.Dispose();
+                //Kullanıcı kimliği almayan favori silme fonksiyonu yazılmalı.
+
+                bağlantı.Close();
+                bağlantı.Dispose();
+
+                return true;
+            }
+            else
+            {
+                bağlantı.Close();
+                bağlantı.Dispose();
+
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

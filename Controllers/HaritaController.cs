@@ -86,4 +86,32 @@ public class Harita : ControllerBase
             return new StatusCodeResult(403); //Forbidden
         }
     }
+
+    [HttpDelete("NoktaSil/{Kimlik}/{Silici_KullanıcıK}/{Silici_OturumK}")]
+    public IActionResult NoktaSil(string Kimlik, string Silici_KullanıcıK, string Silici_OturumK)
+    {
+        Kimlik = Uri.UnescapeDataString(Kimlik);
+        Silici_KullanıcıK = Uri.UnescapeDataString(Silici_KullanıcıK);
+        Silici_OturumK = Uri.UnescapeDataString(Silici_OturumK);
+
+        Models.Roller rol_Silici = new Models.Roller(Silici_KullanıcıK, "Nokta Silici");
+        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_Silici);
+        bool OturumAçık = OturumVT.OturumAçık(Silici_KullanıcıK, Silici_OturumK);
+
+        if(YetkiVar && OturumAçık)
+        {
+           if(HaritaFonksiyonları.BölgeSil(Kimlik))
+            {
+                return new StatusCodeResult(200); //OK
+            }
+            else
+            {
+                return new StatusCodeResult(422); //Unprocessable Content
+            }
+        }
+        else
+        {
+            return new StatusCodeResult(403); //Forbidden
+        }
+    }
 }
