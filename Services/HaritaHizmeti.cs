@@ -133,6 +133,38 @@ public static class HaritaFonksiyonları
         return (sonuc >= 1);
     }
 
+    /**
+    * <summary>
+    * Belirtilen kimliğe sahip bir nokta bulunup bulunmadığını denetler.
+    * </summary>
+    * <remarks>
+    * <para>
+    * Aynı sınıfta bulunan
+    * <see cref="bulgarita.Services.HaritaFonksiyonları.VeriVarAçık(string, string, MySqlConnection)">
+    * VeriVarAçık
+    * </see>
+    * metodunu kullanır.
+    * </para>
+    * </remarks>
+    *
+    * <param name="kimlik">Kullanım durumu sorgulanan nokta kimliği</param>
+    *
+    * <returns>
+    * Verilen kimliğe sahip bir nokta varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool KimlikKullanımda(string kimlik)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+        bool sonuç = VeriVarAçık("Kimlik", kimlik, bağlantı);
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return sonuç;
+    }
+
     public static bool BölgeSil(string Kimlik)
     {
         try

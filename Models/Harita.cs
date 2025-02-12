@@ -1,3 +1,7 @@
+using System.Security.Cryptography;
+using System.Text;
+using bulgarita.Services;
+
 namespace bulgarita.Models;
 
 public class Harita
@@ -38,7 +42,42 @@ public class Harita
         this.Bölge_Türü = haritaStringArray[6];
         this.Üst_Bölge = haritaStringArray[7];
         this.Kimlik = haritaStringArray[8];
-    } 
+    }
+
+    /**
+    * <summary>
+    * Yeni bir eşsiz nokta kimliği üretir.
+    * </summary>
+    * <remarks>
+    * <para>
+    * 24 byte boyutunda kriptografik olarak güvenli bir rastgele sayı üretir.
+    * Sonra sayıyı Base64 metnine dönüştürüp, kullanım durumunu denetler.
+    * </para>
+    * </remarks>
+    *
+    * <returns>
+    * Üretilen rastgele Base64 metni kimlik olarak kullanımda değilse metni döndürür.
+    * Metin kullanımdaysa kullanımda olmayan bir rastgele metin üretene kadar
+    * kendisini çağırır.
+    * </returns>
+    */
+    public static string YeniKimlik()
+    {
+        RandomNumberGenerator üreteç = RandomNumberGenerator.Create();
+        byte[] rastgele = new byte[24];
+        üreteç.GetBytes(rastgele);
+        string sonuç = Convert.ToBase64String(rastgele);
+        üreteç.Dispose();
+
+        if (HaritaFonksiyonları.KimlikKullanımda(sonuç))
+        {
+            return YeniKimlik();
+        }
+        else
+        {
+            return sonuç;
+        }
+    }
 
     public string[] ToStringArray() 
     {
