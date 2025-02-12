@@ -46,6 +46,50 @@ public class Harita
 
     /**
     * <summary>
+    * Eşsiz bir kimlik ile yeni bir nokta nesnesi oluşturur.
+    * </summary>
+    */
+    public static Harita YeniNokta(double EnlemDrc, double BoylamDrc,
+            string BulgarcaLatinİsim, string BulgarcaKirilİsim,
+            string Türkçeİsim, string Osmanlıcaİsim, string BölgeTürü,
+            string ÜstBölge)
+    {
+        // Ekvatordan 90 dereceden fazla uzaklaşılamaz.
+        if (EnlemDrc > 90 || EnlemDrc < -90)
+        {
+            return null;
+        }
+        // Başlangıç meridyeninden 180 dereceden fazla uzaklaşılamaz.
+        if (BoylamDrc > 180 || BoylamDrc < -180)
+        {
+            return null;
+        }
+
+        // Belirtilen üst bölge kayıtlı değilse o bilgi boş bırakılır.
+        if (!HaritaFonksiyonları.KimlikKullanımda(ÜstBölge))
+        {
+            ÜstBölge = null;
+        }
+
+        // Parametreler uygunsa yeni bir kimlik üretilip nesne oluşturulur.
+        string kimlik = YeniKimlik();
+        Harita yeni_nokta = new Harita(
+            EnlemDrc,
+            BoylamDrc,
+            BulgarcaLatinİsim,
+            BulgarcaKirilİsim,
+            Türkçeİsim,
+            Osmanlıcaİsim,
+            BölgeTürü,
+            ÜstBölge,
+            kimlik
+        );
+
+        return yeni_nokta;
+    }
+
+    /**
+    * <summary>
     * Yeni bir eşsiz nokta kimliği üretir.
     * </summary>
     * <remarks>
