@@ -64,6 +64,24 @@ public static class RollerFonksiyonları
         return false;
     }
 
+    /**
+    * <summary>
+    * Belirtilen kullanıcının nokta ekleme yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Nokta Ekleyici rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool NoktaEkleyebilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Ekleyici");
+        return SatırVar(aranan);
+    }
+
     public static bool SatırVar_AçıkBağlantı(Models.Roller roller, MySqlConnection Açık_Bağlantı)
     {
         string kod = $"SELECT COUNT(Rol) FROM {Bağlantı.Roller_Tablosu} ";
