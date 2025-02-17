@@ -8,8 +8,9 @@ namespace bulgarita.Controllers;
 
 public class Roller : ControllerBase
 {
-    [HttpPost("RolVer_NoktaEkleyici/{Kullanıcı_Kimliği}/{RolVerici_KullanıcıK}/{RolVerici_OturumK}")]
-    public IActionResult RolVer_NoktaEkleyici(string Kullanıcı_Kimliği, string RolVerici_KullanıcıK, string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaEkleyici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolVer_NoktaEkleyici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
@@ -38,8 +39,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_NoktaDüzenleyici/{Kullanıcı_Kimliği}/{RolVerici_KullanıcıK}/{RolVerici_OturumK}")]
-    public IActionResult RolVer_NoktaDüzenleyici(string Kullanıcı_Kimliği, string RolVerici_KullanıcıK, string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaDüzenleyici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolVer_NoktaDüzenleyici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
@@ -68,8 +70,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_NoktaSilici/{Kullanıcı_Kimliği}/{RolVerici_KullanıcıK}/{RolVerici_OturumK}")]
-    public IActionResult RolVer_NoktaSilici(string Kullanıcı_Kimliği, string RolVerici_KullanıcıK, string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaSilici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolVer_NoktaSilici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
@@ -98,8 +101,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}/{RolVerici_KullanıcıK}/{RolVerici_OturumK}")]
-    public IActionResult RolVer_RolAtayıcıAlıcı(string Kullanıcı_Kimliği, string RolVerici_KullanıcıK, string RolVerici_OturumK)
+    [HttpPost("RolVer_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}")]
+    public IActionResult RolVer_RolAtayıcıAlıcı(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
@@ -128,8 +132,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_KullanıcıSilici/{Kullanıcı_Kimliği}/{RolVerici_KullanıcıK}/{RolVerici_OturumK}")]
-    public IActionResult RolVer_KullanıcıSilici(string Kullanıcı_Kimliği, string RolVerici_KullanıcıK, string RolVerici_OturumK)
+    [HttpPost("RolVer_KullanıcıSilici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolVer_KullanıcıSilici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
@@ -158,8 +163,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaEkleyici/{Kullanıcı_Kimliği}/{RolAlıcı_KullanıcıK}/{RolAlıcı_OturumK}")]
-    public IActionResult RolAl_NoktaEkleyici(string Kullanıcı_Kimliği, string RolAlıcı_KullanıcıK, string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaEkleyici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolAl_NoktaEkleyici(string Kullanıcı_Kimliği, 
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
@@ -188,8 +194,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaDüzenleyici/{Kullanıcı_Kimliği}/{RolAlıcı_KullanıcıK}/{RolAlıcı_OturumK}")]
-    public IActionResult RolAl_NoktaDüzenleyici(string Kullanıcı_Kimliği, string RolAlıcı_KullanıcıK, string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaDüzenleyici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolAl_NoktaDüzenleyici(string Kullanıcı_Kimliği, 
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
@@ -218,8 +225,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaSilici/{Kullanıcı_Kimliği}/{RolAlıcı_KullanıcıK}/{RolAlıcı_OturumK}")]
-    public IActionResult RolAl_NoktaSilici(string Kullanıcı_Kimliği, string RolAlıcı_KullanıcıK, string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaSilici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolAl_NoktaSilici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
@@ -248,8 +256,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}/{RolAlıcı_KullanıcıK}/{RolAlıcı_OturumK}")]
-    public IActionResult RolAl_RolAtayıcıAlıcı(string Kullanıcı_Kimliği, string RolAlıcı_KullanıcıK, string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}")]
+    public IActionResult RolAl_RolAtayıcıAlıcı(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
@@ -278,8 +287,9 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_KullanıcıSilici/{Kullanıcı_Kimliği}/{RolAlıcı_KullanıcıK}/{RolAlıcı_OturumK}")]
-    public IActionResult RolAl_KullanıcıSilici(string Kullanıcı_Kimliği, string RolAlıcı_KullanıcıK, string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_KullanıcıSilici/{Kullanıcı_Kimliği}")]
+    public IActionResult RolAl_KullanıcıSilici(string Kullanıcı_Kimliği,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK,[FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
