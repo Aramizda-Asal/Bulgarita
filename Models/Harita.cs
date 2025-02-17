@@ -16,6 +16,13 @@ public class Harita
     public string Üst_Bölge;
     public string Kimlik;
 
+    public static readonly string[][] UygunTürler = new string[][] {
+        new string[] {"Ülke"},
+        new string[] {"İl"},
+        new string[] {"İlçe"},
+        new string[] {"Kasaba", "Köy"}
+    };
+
     public Harita() {}
     public Harita(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim,
     string Türkçe_İsim, string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik)
