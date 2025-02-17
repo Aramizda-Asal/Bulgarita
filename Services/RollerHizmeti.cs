@@ -82,6 +82,24 @@ public static class RollerFonksiyonları
         return SatırVar(aranan);
     }
 
+    /**
+    * <summary>
+    * Belirtilen kullanıcının nokta düzenleme yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Nokta Düzenleyici rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool NoktaDüzenleyebilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Düzenleyici");
+        return SatırVar(aranan);
+    }
+
     public static bool SatırVar_AçıkBağlantı(Models.Roller roller, MySqlConnection Açık_Bağlantı)
     {
         string kod = $"SELECT COUNT(Rol) FROM {Bağlantı.Roller_Tablosu} ";
