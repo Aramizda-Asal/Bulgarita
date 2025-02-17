@@ -427,4 +427,44 @@ public class Roller : ControllerBase
 
         return new StatusCodeResult(403); //Forbidden
     }
+
+    /**
+    * <summary>
+    * Kullanıcının kendisinin Rol Atayıcı/Alıcı rolü olup olmadığını
+    * sorgulaması için API denetçisi.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP POST türünde bir metoddur. Yalnızca durum kodu döndürür.
+    * </para>
+    * </remarks>
+    *
+    * <param name="KullanıcıKimliği">Sorgulayan kullanıcının kimliği</param>
+    * <param name="OturumKimliği">Sorgunun yapıldığı oturumun kimliği</param>
+    *
+    * <returns>
+    * Kullanıcının oturumu geçerliyse ve Rol Atayıcı/Alıcı rolü varsa <c>200 OK</c>,
+    * oturum geçersizse veya Rol Atayıcı/Alıcı rolü yoksa <c>403 Forbidden</c>.
+    * </returns>
+    */
+    [HttpPost("RolAtayabilirimAlabilirim")]
+    public IActionResult RolAtayabilirimAlabilirim(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+            [FromHeader(Name="OTURUM")] string OturumKimliği)
+    {
+        bool oturum_açık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
+
+        if (oturum_açık)
+        {
+            Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+            bool rol_var = RollerFonksiyonları.RolAtayabilirAlabilir(kullanıcı);
+
+            if (rol_var)
+            {
+                return new StatusCodeResult(200); //OK
+            }
+        }
+
+        return new StatusCodeResult(403); //Forbidden
+    }
 }

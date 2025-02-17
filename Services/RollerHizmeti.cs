@@ -118,6 +118,24 @@ public static class RollerFonksiyonları
         return SatırVar(aranan);
     }
 
+    /**
+    * <summary>
+    * Belirtilen kullanıcının rol atama/alma yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Rol Atayıcı/Alıcı rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool RolAtayabilirAlabilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Atayıcı/Alıcı");
+        return SatırVar(aranan);
+    }
+
     public static bool SatırVar_AçıkBağlantı(Models.Roller roller, MySqlConnection Açık_Bağlantı)
     {
         string kod = $"SELECT COUNT(Rol) FROM {Bağlantı.Roller_Tablosu} ";
