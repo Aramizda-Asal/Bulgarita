@@ -387,4 +387,44 @@ public class Roller : ControllerBase
 
         return new StatusCodeResult(403); //Forbidden
     }
+
+    /**
+    * <summary>
+    * Kullanıcının kendisinin Nokta Silici rolü olup olmadığını
+    * sorgulaması için API denetçisi.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP POST türünde bir metoddur. Yalnızca durum kodu döndürür.
+    * </para>
+    * </remarks>
+    *
+    * <param name="KullanıcıKimliği">Sorgulayan kullanıcının kimliği</param>
+    * <param name="OturumKimliği">Sorgunun yapıldığı oturumun kimliği</param>
+    *
+    * <returns>
+    * Kullanıcının oturumu geçerliyse ve Nokta Silici rolü varsa <c>200 OK</c>,
+    * oturum geçersizse veya Nokta Silici rolü yoksa <c>403 Forbidden</c>.
+    * </returns>
+    */
+    [HttpPost("NoktaSilebilirim")]
+    public IActionResult NoktaSilebilirim(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+            [FromHeader(Name="OTURUM")] string OturumKimliği)
+    {
+        bool oturum_açık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
+
+        if (oturum_açık)
+        {
+            Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+            bool rol_var = RollerFonksiyonları.NoktaSilebilir(kullanıcı);
+
+            if (rol_var)
+            {
+                return new StatusCodeResult(200); //OK
+            }
+        }
+
+        return new StatusCodeResult(403); //Forbidden
+    }
 }
