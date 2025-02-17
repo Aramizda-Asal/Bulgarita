@@ -52,4 +52,31 @@ public class Favori : ControllerBase
             return new StatusCodeResult(400);
         }
     }
+
+    [HttpGet("FavorileriGöster")]
+    public IActionResult FavorileriAl([FromHeader(Name ="KULLANICI")] string Kullanıcı_Kimliği, [FromHeader(Name="OTURUM")] string Oturum_Kimliği)
+    {
+        bool OturumAçık = OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği);
+
+        if(OturumAçık)
+        {
+            List<String> Favori_Kimlikleri = FavorilerFonksiyonları.FavorileriAl(Kullanıcı_Kimliği);
+
+            if(Favori_Kimlikleri != null)
+            {
+                JsonResult yanıt = new JsonResult(Newtonsoft.Json.JsonConvert.SerializeObject(Favori_Kimlikleri));
+                yanıt.StatusCode = 200; // OK
+                return yanıt;
+            }
+            else
+            {
+                return new StatusCodeResult(204); //No Content
+            }
+        }
+        else
+        {
+            return new StatusCodeResult(403); //Forbidden
+        }
+    }
 }
+    

@@ -134,4 +134,27 @@ public static class FavorilerFonksiyonları
         }
         
     }
+
+    public static List<String> FavorileriAl(string Kullanıcı_Kimliği)
+    {
+        List<String> Favori_Kimlikleri = new List<string>();
+        
+        string cs = Bağlantı.bağlantı_dizisi;
+
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        string kod = $"SELECT Konum_Kimliği FROM {Bağlantı.Favoriler_Tablosu} WHERE Kullanıcı = @kullanıcı_kimliği";
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        komut.Parameters.AddWithValue("@kullanıcı_kimliği", Kullanıcı_Kimliği);
+        MySqlDataReader okuyucu =  komut.ExecuteReader();
+
+        while(okuyucu.Read())
+        {
+            string Konum_Kimliği = okuyucu.GetString("Konum_Kimliği");
+            Favori_Kimlikleri.Add(Konum_Kimliği);
+        }
+
+        return Favori_Kimlikleri;
+    }
 }
