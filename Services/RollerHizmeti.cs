@@ -82,6 +82,78 @@ public static class RollerFonksiyonları
         return SatırVar(aranan);
     }
 
+    /**
+    * <summary>
+    * Belirtilen kullanıcının nokta düzenleme yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Nokta Düzenleyici rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool NoktaDüzenleyebilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Düzenleyici");
+        return SatırVar(aranan);
+    }
+
+    /**
+    * <summary>
+    * Belirtilen kullanıcının nokta silme yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Nokta Silici rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool NoktaSilebilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Silici");
+        return SatırVar(aranan);
+    }
+
+    /**
+    * <summary>
+    * Belirtilen kullanıcının rol atama/alma yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Rol Atayıcı/Alıcı rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool RolAtayabilirAlabilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Atayıcı/Alıcı");
+        return SatırVar(aranan);
+    }
+
+    /**
+    * <summary>
+    * Belirtilen kullanıcının kullanıcı silme yetkisi olup olmadığını denetler.
+    * </summary>
+    *
+    * <param name="kullanıcı">Rolleri incelenen kullanıcının nesnesi</param>
+    *
+    * <returns>
+    * Kullanıcının Kullanıcı Silici rolü varsa <c>true</c>,
+    * yoksa <c>false</c>.
+    * </returns>
+    */
+    public static bool KullanıcıSilebilir(Kullanıcı kullanıcı)
+    {
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Kullanıcı Silici");
+        return SatırVar(aranan);
+    }
+
     public static bool SatırVar_AçıkBağlantı(Models.Roller roller, MySqlConnection Açık_Bağlantı)
     {
         string kod = $"SELECT COUNT(Rol) FROM {Bağlantı.Roller_Tablosu} ";
