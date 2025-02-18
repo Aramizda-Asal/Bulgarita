@@ -26,6 +26,20 @@ public class Harita : ControllerBase
         return BölgeListeDizi;
     }
 
+    [HttpGet("NoktaAl")]
+    public string[][] NoktaAl()
+    {
+        List<Models.Harita> BölgeListe = HaritaFonksiyonları.BölgelerinBilgileriniAl();
+        string[][] BölgeListeDizi = new string[BölgeListe.Count()][]; //ikinci boyutun boyutu hep 9.
+        int index = 0;
+        foreach (Models.Harita nokta in BölgeListe)
+        {
+            BölgeListeDizi[index] = nokta.ToStringArray();
+            index++;
+        }
+        return BölgeListeDizi;
+    }
+
     [HttpPost(
     "NoktaKoy/{EnlemDrc}/{BoylamDrc}/{Bulgarca_Latin_İsim}/{Bulgarca_Kiril_İsim}/{Türkçe_İsim}/{Osmanlıca_İsim}/{Bölge_Türü}/{Üst_Bölge}/{Kimlik}/{Ekleyici_KullanıcıK}/{Ekleyici_OturumK}")]
     public IActionResult NoktaKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
