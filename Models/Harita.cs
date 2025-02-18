@@ -1,21 +1,40 @@
 using System.Security.Cryptography;
 using System.Text;
 using bulgarita.Services;
+using Newtonsoft.Json;
 
 namespace bulgarita.Models;
 
 public class Harita
 {
+    [JsonProperty("enlem")]
     public double EnlemDrc;
+
+    [JsonProperty("boylam")]
     public double BoylamDrc;
+
+    [JsonProperty("Bulgarca_Latin")]
     public string Bulgarca_Latin_İsim;
+    
+    [JsonProperty("Bulgarca_Kiril")]
     public string Bulgarca_Kiril_İsim;
+    
+    [JsonProperty("Türkçe")]
     public string Türkçe_İsim;
+    
+    [JsonProperty("Osmanlıca")]
     public string Osmanlıca_İsim;
+    
+    [JsonProperty("bölge_türü")]
     public string Bölge_Türü;
+    
+    [JsonProperty("üst_bölge")]
     public string Üst_Bölge;
+    
+    [JsonProperty("kimlik")]
     public string Kimlik;
 
+    [JsonIgnore]
     public static readonly string[][] UygunTürler = new string[][] {
         new string[] {"Ülke"},
         new string[] {"İl"},

@@ -8,6 +8,17 @@ namespace bulgarita.Services;
 
 public static class HaritaFonksiyonları
 {
+    /**
+    * <summary>
+    * Belirtilen türdeki noktaları bir List'te bir araya getirir.
+    * </summary>
+    *
+    * <param name="bölge_türü">Aranan noktaların bölge türü</param>
+    *
+    * <returns>
+    * Belirtilen bölge türündeki noktaları içeren bir List.
+    * </returns>
+    */
     public static List<Harita> BölgelerinBilgileriniAl(string bölge_türü)
     {
         string cs = Bağlantı.bağlantı_dizisi;
@@ -19,36 +30,39 @@ public static class HaritaFonksiyonları
         $"SELECT * FROM {Bağlantı.Harita_Tablosu} WHERE Bölge_Türü = @bölge_türü;";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
-
         komut.Parameters.AddWithValue("@bölge_türü", bölge_türü);
-
-        Models.Harita haritaNoktalar = new Models.Harita();
         
         MySqlDataReader okuyucu =  komut.ExecuteReader();
-        List<Harita> BölgeListe = new List<Harita>();
+        List<Harita> sonuçlar = new List<Harita>();
 
         while(okuyucu.Read())
         {
-            double EnlemDrc = okuyucu.GetDouble("EnlemDrc");
-            double BoylamDrc = okuyucu.GetDouble("BoylamDrc");
-            string Bulgarca_Latin_İsim = okuyucu.GetString("Bulgarca_Latin_İsim");
-            string Bulgarca_Kiril_İsim = okuyucu.GetString("Bulgarca_Kiril_İsim");
-            string Türkçe_İsim = okuyucu.GetString("Türkçe_İsim");
-            string Osmanlıca_İsim = okuyucu.GetString("Osmanlıca_İsim");
-            string Bölge_Türü = okuyucu.GetString("Bölge_Türü");
-            string Üst_Bölge = okuyucu.GetString("Üst_Bölge");
-            string Kimlik = okuyucu.GetString("Kimlik");
-
-            Harita bölge = 
-            new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik);
-            BölgeListe.Add(bölge);
+            try
+            {
+                Harita bölge = new Harita(
+                    double.Parse(okuyucu["EnlemDrc"].ToString()),
+                    double.Parse(okuyucu["BoylamDrc"].ToString()),
+                    okuyucu["Bulgarca_Latin_İsim"].ToString(),
+                    okuyucu["Bulgarca_Kiril_İsim"].ToString(),
+                    okuyucu["Türkçe_İsim"].ToString(),
+                    okuyucu["Osmanlıca_İsim"].ToString(),
+                    okuyucu["Bölge_Türü"].ToString(),
+                    okuyucu["Üst_Bölge"].ToString(),
+                    okuyucu["Kimlik"].ToString()
+                );
+                sonuçlar.Add(bölge);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                continue;
+            }
         }
 
         okuyucu.Close();
-        
         komut.Dispose();
 
-        return BölgeListe;
+        return sonuçlar;
     }
 
     
@@ -164,6 +178,36 @@ public static class HaritaFonksiyonları
             return false;
         }
 
+    }
+
+    /**
+    * <summary>
+    * Girilen bölge türünün bulunduğu düzeyin indisini bulur.
+    * </summary>
+    *
+    * <param name="bölge_türü">Düzeyi aranan bölge türü</param>
+    *
+    * <returns>
+    * Girilen bölge türü uygunsa UygunTürler'in ilk boyutundaki indisi döndürür.
+    * Uygun değilse <c>-1</c> döndürür.
+    * </returns>
+    *
+    * <seealso cref="bulgarita.Models.Harita.UygunTürler" />
+    */
+    public static int BölgeTürüDüzeyi(string bölge_türü)
+    {
+        if (String.IsNullOrWhiteSpace(bölge_türü))
+        {
+            return -1;
+        }
+        for (int a = 0; a < Harita.UygunTürler.Length; a++)
+        {
+            if (Harita.UygunTürler[a].Contains<string>(bölge_türü))
+            {
+                return a;
+            }
+        }
+        return -1;
     }
 
     public static bool VeriVarAçık(string sütun, string veri, MySqlConnection açık_bağlantı)

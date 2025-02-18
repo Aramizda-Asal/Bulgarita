@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
+using Newtonsoft.Json;
 using bulgarita.Models;
 using bulgarita;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,6 +13,41 @@ namespace bulgarita.Controllers;
 
 public class Harita : ControllerBase
 {
+    [HttpGet("GeçerliNoktaTürleri")]
+    public IActionResult GeçerliNoktaTürleri()
+    {
+        try 
+        {
+            int tür_niceliği = 0;
+            for (int a = 0; a < Models.Harita.UygunTürler.Length; a++)
+            {
+                tür_niceliği += Models.Harita.UygunTürler[a].Length;
+            }
+
+            string[] sonuç = new string[tür_niceliği];
+            int i = 0;
+            for (int a = 0; a < Models.Harita.UygunTürler.Length; a++)
+            {
+                for (int b = 0; b < Models.Harita.UygunTürler[a].Length; b++)
+                {
+                    sonuç[i] = Models.Harita.UygunTürler[a][b];
+                    i++;
+                }
+            }
+
+            string json = JsonConvert.SerializeObject(sonuç);
+
+            JsonResult yanıt = new JsonResult(json);
+            yanıt.StatusCode = 200; //OK
+            return yanıt;
+        }
+        catch
+        {
+            StatusCodeResult yanıt = new StatusCodeResult(500); //Internal Server Error
+            return yanıt;
+        }
+    }
+
     [HttpGet("NoktaAl/{bölge_türü}")]
     public string[][] NoktaAl(string bölge_türü)
     {
@@ -38,6 +74,39 @@ public class Harita : ControllerBase
             index++;
         }
         return BölgeListeDizi;
+    }
+
+    [HttpGet("ÜsteGelebilecekNoktalar/{BölgeTürü}/")]
+    public IActionResult ÜsteGelebilecekNoktalar(string BölgeTürü)
+    {
+        BölgeTürü = Uri.UnescapeDataString(BölgeTürü);
+
+        int düzey = HaritaFonksiyonları.BölgeTürüDüzeyi(BölgeTürü);
+        if (düzey == -1 || düzey == 0)
+        {
+            return new StatusCodeResult(404); // Not Found
+        }
+
+        düzey--; // Bir üst düzeye erişmek için indis eksiltiliyor.
+        List<Models.Harita> noktalar = new List<Models.Harita>();
+        for (int a = 0; a < Models.Harita.UygunTürler[düzey].Length; a++)
+        {
+            noktalar.AddRange(
+                HaritaFonksiyonları.BölgelerinBilgileriniAl(
+                    Models.Harita.UygunTürler[düzey][a]
+                )
+            );
+        }
+
+        if (noktalar.Count < 1)
+        {
+            return new StatusCodeResult(204); // No Content
+        }
+
+        string json = JsonConvert.SerializeObject(noktalar);
+        JsonResult yanıt = new JsonResult(json);
+        yanıt.StatusCode = 200; // OK
+        return yanıt;
     }
 
     [HttpPost(
