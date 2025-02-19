@@ -170,20 +170,20 @@ public class Harita : ControllerBase
         }
     }
 
-    [HttpDelete("NoktaSil/{Kimlik}/{Silici_KullanıcıK}/{Silici_OturumK}")]
-    public IActionResult NoktaSil(string Kimlik, string Silici_KullanıcıK, string Silici_OturumK)
+    [HttpDelete("NoktaSil")]
+    public IActionResult NoktaSil(
+        [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+        [FromHeader(Name="OTURUM")] string OturumKimliği,
+        [FromHeader(Name ="NOKTA")] string NoktaKimliği)
     {
-        Kimlik = Uri.UnescapeDataString(Kimlik);
-        Silici_KullanıcıK = Uri.UnescapeDataString(Silici_KullanıcıK);
-        Silici_OturumK = Uri.UnescapeDataString(Silici_OturumK);
 
-        Models.Roller rol_Silici = new Models.Roller(Silici_KullanıcıK, "Nokta Silici");
+        Models.Roller rol_Silici = new Models.Roller(KullanıcıKimliği, "Nokta Silici");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_Silici);
-        bool OturumAçık = OturumVT.OturumAçık(Silici_KullanıcıK, Silici_OturumK);
+        bool OturumAçık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
 
         if(YetkiVar && OturumAçık)
         {
-           if(HaritaFonksiyonları.BölgeSil(Kimlik))
+           if(HaritaFonksiyonları.BölgeSil(NoktaKimliği))
             {
                 return new StatusCodeResult(200); //OK
             }
