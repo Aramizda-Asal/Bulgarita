@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
 using Newtonsoft.Json;
-using bulgarita.Models;
 using bulgarita;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;
 
 namespace bulgarita.Controllers;
@@ -82,9 +80,13 @@ public class Harita : ControllerBase
         BölgeTürü = Uri.UnescapeDataString(BölgeTürü);
 
         int düzey = HaritaFonksiyonları.BölgeTürüDüzeyi(BölgeTürü);
-        if (düzey == -1 || düzey == 0)
+        if (düzey == -1)
         {
             return new StatusCodeResult(404); // Not Found
+        }
+        else if (düzey == 0)
+        {
+            return new StatusCodeResult(204); // No Content
         }
 
         düzey--; // Bir üst düzeye erişmek için indis eksiltiliyor.
@@ -109,6 +111,7 @@ public class Harita : ControllerBase
         return yanıt;
     }
 
+    // Yakında kaldırılacak.
     [HttpPost(
     "NoktaKoy/{EnlemDrc}/{BoylamDrc}/{Bulgarca_Latin_İsim}/{Bulgarca_Kiril_İsim}/{Türkçe_İsim}/{Osmanlıca_İsim}/{Bölge_Türü}/{Üst_Bölge}/{Kimlik}/{Ekleyici_KullanıcıK}/{Ekleyici_OturumK}")]
     public IActionResult NoktaKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
@@ -138,6 +141,56 @@ public class Harita : ControllerBase
         else
         {
             return new StatusCodeResult(403); //Forbidden
+        }
+    }
+
+    [HttpPut("NoktaEkle/")]
+    public IActionResult NoktaEkle(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+            [FromHeader(Name="OTURUM")] string OturumKimliği,
+            [FromBody] string gövde)
+    {
+        bool oturum_açık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
+
+        if (oturum_açık)
+        {
+            if (Request.ContentType != "application/json")
+            {
+                return new StatusCodeResult(400); // Bad Request
+            }
+            
+            try
+            {
+                Models.Harita gelen = JsonConvert.DeserializeObject<Models.Harita>(gövde);
+                Models.Harita yeni = Models.Harita.YeniNokta(
+                    gelen.EnlemDrc,
+                    gelen.BoylamDrc,
+                    gelen.Bulgarca_Latin_İsim,
+                    gelen.Bulgarca_Kiril_İsim,
+                    gelen.Türkçe_İsim,
+                    gelen.Osmanlıca_İsim,
+                    gelen.Bölge_Türü,
+                    gelen.Üst_Bölge
+                );
+
+                if (yeni != null)
+                {
+                    if (HaritaFonksiyonları.YeniBölgeKaydet(yeni))
+                    {
+                        return new StatusCodeResult(200); // OK
+                    }
+                }
+
+                return new StatusCodeResult(500); // Internal Server Error
+            }
+            catch
+            {
+                return new StatusCodeResult(500); // Internal Server Error
+            }
+        }
+        else
+        {
+            return new StatusCodeResult(403); // Forbidden
         }
     }
 
