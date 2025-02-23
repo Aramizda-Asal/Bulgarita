@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
+using Newtonsoft.Json;
+using Rol_M = bulgarita.Models.Roller;
 
 namespace bulgarita.Controllers;
 
@@ -8,6 +10,26 @@ namespace bulgarita.Controllers;
 
 public class Roller : ControllerBase
 {
+    [HttpGet("GeçerliRoller")]
+    public IActionResult GeçerliRoller()
+    {
+        try 
+        {
+            string[] sonuç = Rol_M.RollerDizisi;
+
+            string json = JsonConvert.SerializeObject(sonuç);
+
+            JsonResult yanıt = new JsonResult(json);
+            yanıt.StatusCode = 200; //OK
+            return yanıt;
+        }
+        catch
+        {
+            StatusCodeResult yanıt = new StatusCodeResult(500); //Internal Server Error
+            return yanıt;
+        }
+    }
+
     [HttpPost("RolVer_NoktaEkleyici/{Kullanıcı_Kimliği}")]
     public IActionResult RolVer_NoktaEkleyici(string Kullanıcı_Kimliği,
             [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
@@ -74,6 +96,7 @@ public class Roller : ControllerBase
     public IActionResult RolVer_NoktaSilici(string Kullanıcı_Kimliği,
             [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
+        Console.WriteLine("çağırıldım");
         Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
@@ -84,19 +107,23 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
+            Console.WriteLine("yetki var, oturum açık");
             Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Silici");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
+                Console.WriteLine("created");
                 return new StatusCodeResult(201); //Created
             }
             else
             {
+                Console.WriteLine("unprocessable");
                 return new StatusCodeResult(422); //Unprocessable Content
             }
         }
         else
         {
+            Console.WriteLine("forbiddden");
             return new StatusCodeResult(403); //Forbidden
         }
     }
@@ -516,5 +543,154 @@ public class Roller : ControllerBase
         }
 
         return new StatusCodeResult(403); //Forbidden
+    }
+
+    /**
+    * <summary>
+    * Seçili kullanıcının sahip olduğu rolleri döndürür.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP GET türünde bir metoddur. 
+    * </para>
+    * </remarks>
+    *
+    * <param name="KullanıcıKimliği">Rolleri getirilecek kullanıcının kimliği</param>
+    *
+    * <returns>
+    * Seçili kullanıcının sahip olduğu rolleri
+    * </returns>
+    */
+    [HttpGet("KullanıcınınRolleri")]
+    public IActionResult KullanıcınınRolleri(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği)
+    {
+        try
+        {
+            List<string> sahipOlunanRoller = [];
+            Models.Kullanıcı kullanıcı = 
+                KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+
+            if(RollerFonksiyonları.NoktaEkleyebilir(kullanıcı))
+            {
+                sahipOlunanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaEkleyici]);
+            }
+            if(RollerFonksiyonları.NoktaDüzenleyebilir(kullanıcı))
+            {
+                sahipOlunanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaDüzenleyici]);
+            }
+            if(RollerFonksiyonları.NoktaSilebilir(kullanıcı))
+            {
+                sahipOlunanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaSilici]);
+            }
+            if(RollerFonksiyonları.RolAtayabilirAlabilir(kullanıcı))
+            {
+                sahipOlunanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.RolAtayıcıAlıcı]);
+            }
+            if(RollerFonksiyonları.KullanıcıSilebilir(kullanıcı))
+            {
+                sahipOlunanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.KullanıcıSilici]);
+            }
+
+            string json = JsonConvert.SerializeObject(sahipOlunanRoller);
+
+            JsonResult yanıt = new JsonResult(json);
+
+            if(sahipOlunanRoller.Count() > 0)
+            {
+                yanıt.StatusCode = 200; //OK
+                return yanıt;
+            }
+            else
+            {
+                return new StatusCodeResult(204); // No Content
+            }
+        }
+        catch
+        {
+            StatusCodeResult yanıt = new StatusCodeResult(500); //Internal Server Error
+            return yanıt;
+        }
+
+    }
+
+    /**
+    * <summary>
+    * Seçili kullanıcının sahip olmadığı rolleri döndürür.
+    * </summary>
+    * <remarks>
+    * <para>
+    * HTTP GET türünde bir metoddur. 
+    * </para>
+    * </remarks>
+    *
+    * <param name="KullanıcıKimliği">Sahip olmadığı rolleri getirilecek 
+    * kullanıcının kimliği</param>
+    *
+    * <returns>
+    * Seçili kullanıcının sahip olmadığı rolleri
+    * </returns>
+    */
+    [HttpGet("KullanıcınınRolleriDeğil")]
+    public IActionResult KullanıcınınRolleriDeğil(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği)
+    {
+        try
+        {
+            List<string> sahipOlunmayanRoller = [];
+            Models.Kullanıcı kullanıcı = 
+                KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+
+            if(!RollerFonksiyonları.NoktaEkleyebilir(kullanıcı))
+            {
+                sahipOlunmayanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaEkleyici]);
+            }
+            if(!RollerFonksiyonları.NoktaDüzenleyebilir(kullanıcı))
+            {
+                sahipOlunmayanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaDüzenleyici]);
+            }
+            if(!RollerFonksiyonları.NoktaSilebilir(kullanıcı))
+            {
+                sahipOlunmayanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.NoktaSilici]);
+            }
+            if(!RollerFonksiyonları.RolAtayabilirAlabilir(kullanıcı))
+            {
+                sahipOlunmayanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.RolAtayıcıAlıcı]);
+            }
+            if(!RollerFonksiyonları.KullanıcıSilebilir(kullanıcı))
+            {
+                sahipOlunmayanRoller.Add(Rol_M.RollerDizisi[
+                    (int)Rol_M.RollerE.KullanıcıSilici]);
+            }
+
+            string json = JsonConvert.SerializeObject(sahipOlunmayanRoller);
+
+            JsonResult yanıt = new JsonResult(json);
+
+            if(sahipOlunmayanRoller.Count() > 0)
+            {
+                yanıt.StatusCode = 200; //OK
+                return yanıt;
+            }
+            else
+            {
+                return new StatusCodeResult(204); // No Content
+            }
+        }
+        catch
+        {
+            StatusCodeResult yanıt = new StatusCodeResult(500); //Internal Server Error
+            return yanıt;
+        }
+
     }
 }
