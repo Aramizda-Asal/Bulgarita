@@ -132,7 +132,7 @@ public static class RollerFonksiyonları
     */
     public static bool RolAtayabilirAlabilir(Kullanıcı kullanıcı)
     {
-        Roller aranan = new Roller(kullanıcı.Kimlik, "Nokta Atayıcı/Alıcı");
+        Roller aranan = new Roller(kullanıcı.Kimlik, "Rol Atayıcı/Alıcı");
         return SatırVar(aranan);
     }
 
