@@ -3,6 +3,7 @@ using bulgarita.Services;
 using Newtonsoft.Json;
 using bulgarita;
 using System.Net;
+using System.Text.Json.Nodes;
 
 namespace bulgarita.Controllers;
 
@@ -192,6 +193,36 @@ public class Harita : ControllerBase
         {
             return new StatusCodeResult(403); // Forbidden
         }
+    }
+
+    [HttpPut("NoktaGüncelle")]
+    public IActionResult NoktaGüncelle(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+            [FromHeader(Name="OTURUM")] string OturumKimliği,
+            [FromBody] JsonObject gövde)
+    {
+        Models.Harita nokta = JsonConvert.DeserializeObject<Models.Harita>(gövde.ToString());
+        if (OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği))
+        {
+            if (Request.ContentType != "application/json")
+            {
+                return new StatusCodeResult(400); // Bad Request
+            }
+            if(HaritaFonksiyonları.BölgeBilgileriniGüncelle(nokta))
+            {
+                return new StatusCodeResult(200); // OK
+            }
+            else
+            {
+                return new StatusCodeResult(400); // Bad Request
+            }
+            
+        }
+        else
+        {
+            return new StatusCodeResult(403); // Forbidden
+        }
+        
     }
 
     [HttpPatch("NoktaBilgisiGüncelle/{kimlik}/{veri_sütunu}/{yeni_veri}/{Düzenleyici_KullanıcıK}/{Düzenleyici_OturumK}")]
