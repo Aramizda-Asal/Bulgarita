@@ -3,6 +3,7 @@ using bulgarita.Services;
 using Newtonsoft.Json;
 using bulgarita;
 using System.Net;
+using System.Text.Json.Nodes;
 
 namespace bulgarita.Controllers;
 
@@ -148,7 +149,7 @@ public class Harita : ControllerBase
     public IActionResult NoktaEkle(
             [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
             [FromHeader(Name="OTURUM")] string OturumKimliği,
-            [FromBody] string gövde)
+            [FromBody] JsonObject gövde)
     {
         bool oturum_açık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
 
@@ -161,7 +162,7 @@ public class Harita : ControllerBase
             
             try
             {
-                Models.Harita gelen = JsonConvert.DeserializeObject<Models.Harita>(gövde);
+                Models.Harita gelen = JsonConvert.DeserializeObject<Models.Harita>(gövde.ToString());
                 Models.Harita yeni = Models.Harita.YeniNokta(
                     gelen.EnlemDrc,
                     gelen.BoylamDrc,
@@ -172,7 +173,7 @@ public class Harita : ControllerBase
                     gelen.Bölge_Türü,
                     gelen.Üst_Bölge
                 );
-
+                
                 if (yeni != null)
                 {
                     if (HaritaFonksiyonları.YeniBölgeKaydet(yeni))
