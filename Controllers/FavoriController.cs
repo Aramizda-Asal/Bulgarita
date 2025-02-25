@@ -8,57 +8,59 @@ namespace bulgarita.Controllers;
 
 public class Favori : ControllerBase
 {
-    [HttpPost("FavoriEkle/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
-    public IActionResult FavoriEkle(string Kullanıcı_Kimliği, string Konum_Kimliği)
+    [HttpPost("FavoriEkle")]
+    public IActionResult FavoriEkle(
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Kimliği,
+            [FromHeader(Name="OTURUM")] string Oturum_Kimliği,
+            [FromBody] string body)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
-        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
-        if(FavorilerFonksiyonları.FavoriEkle(Kullanıcı_Kimliği, Konum_Kimliği))
+        if(OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği))
         {
-            return new StatusCodeResult(201); //Created
+            if(FavorilerFonksiyonları.FavoriEkle(Kullanıcı_Kimliği, body))
+            {
+                return new StatusCodeResult(201); //Created
+            }
+            else
+            {
+                return new StatusCodeResult(422); //Unprocessable Content
+            }
         }
         else
         {
-            return new StatusCodeResult(422); //Unprocessable Content
+            return new StatusCodeResult(403); //Forbidden
         }
+
     }
 
-    [HttpDelete("FavorilerdenCikar/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
-    public IActionResult FavorilerdenCikar(string Kullanıcı_Kimliği, string Konum_Kimliği)
+    [HttpDelete("FavorilerdenCikar")]
+    public IActionResult FavorilerdenCikar(
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Kimliği,
+            [FromHeader(Name="OTURUM")] string Oturum_Kimliği,
+            [FromBody] string body)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
-        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
-        if(FavorilerFonksiyonları.FavorilerdenCikar(Kullanıcı_Kimliği, Konum_Kimliği))
+        if(OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği))
         {
-            return new StatusCodeResult(201); //Created
+            if(FavorilerFonksiyonları.FavorilerdenCikar(Kullanıcı_Kimliği, body))
+            {
+                return new StatusCodeResult(201); //Created
+            }
+            else
+            {
+                return new StatusCodeResult(422); //Unprocessable Content
+            }
         }
         else
         {
-            return new StatusCodeResult(422); //Unprocessable Content
-        }
-    }
-
-    [HttpPost("SatirVarMi/{Kullanıcı_Kimliği}/{Konum_Kimliği}")]
-    public IActionResult SatirVarMi(string Kullanıcı_Kimliği, string Konum_Kimliği)
-    {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
-        Konum_Kimliği = Uri.UnescapeDataString(Konum_Kimliği);
-        if(FavorilerFonksiyonları.SatırVar(Kullanıcı_Kimliği, Konum_Kimliği))
-        {
-            return new StatusCodeResult(200);
-        }
-        else
-        {
-            return new StatusCodeResult(400);
+            return new StatusCodeResult(403); //Forbidden
         }
     }
 
     [HttpGet("FavorileriGöster")]
-    public IActionResult FavorileriAl([FromHeader(Name ="KULLANICI")] string Kullanıcı_Kimliği, [FromHeader(Name="OTURUM")] string Oturum_Kimliği)
+    public IActionResult FavorileriAl(
+            [FromHeader(Name ="KULLANICI")] string Kullanıcı_Kimliği, 
+            [FromHeader(Name="OTURUM")] string Oturum_Kimliği)
     {
-        bool OturumAçık = OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği);
-
-        if(OturumAçık)
+        if(OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği))
         {
             List<String> Favori_Kimlikleri = FavorilerFonksiyonları.FavorileriAl(Kullanıcı_Kimliği);
 
@@ -71,6 +73,29 @@ public class Favori : ControllerBase
             else
             {
                 return new StatusCodeResult(204); //No Content
+            }
+        }
+        else
+        {
+            return new StatusCodeResult(403); //Forbidden
+        }
+    }
+
+    [HttpPost("SatirVarMi")]
+    public IActionResult SatirVarMi(
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Kimliği,
+            [FromHeader(Name="OTURUM")] string Oturum_Kimliği,
+            [FromBody] string body)
+    {
+        if(OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği))
+        {
+            if(FavorilerFonksiyonları.SatırVar(Kullanıcı_Kimliği, body))
+            {
+                return new StatusCodeResult(200); //OK
+            }
+            else
+            {
+                return new StatusCodeResult(400); //Bad Request
             }
         }
         else
