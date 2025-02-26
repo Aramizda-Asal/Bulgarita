@@ -153,6 +153,50 @@ public static class HaritaFonksiyonları
         return başarılı;
     }
 
+    public static bool BölgeBilgileriniGüncelle(Models.Harita nokta)
+    {
+        if (nokta == null)
+        {
+            return false;
+        }
+
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        bool başarılı = false;
+
+        try
+        {
+            string kod = $"UPDATE {Bağlantı.Harita_Tablosu} SET " +
+                    "EnlemDrc = @enlem, BoylamDrc = @boylam, Bulgarca_Latin_İsim = @bulgarca_latin, " +
+                    "Bulgarca_Kiril_İsim = @bulgarca_kiril, Türkçe_İsim = @türkçe, Osmanlıca_İsim = @osmanlıca, " +
+                    "Bölge_Türü = @tür, Üst_Bölge = @üst_bölge, Kimlik = @kimlik " +
+                    "WHERE Kimlik = @kimlik;"; 
+        
+            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+            komut.Parameters.AddWithValue("@enlem", nokta.EnlemDrc);
+            komut.Parameters.AddWithValue("@boylam", nokta.BoylamDrc);
+            komut.Parameters.AddWithValue("@bulgarca_latin", nokta.Bulgarca_Latin_İsim);
+            komut.Parameters.AddWithValue("@bulgarca_kiril", nokta.Bulgarca_Kiril_İsim);
+            komut.Parameters.AddWithValue("@türkçe", nokta.Türkçe_İsim);
+            komut.Parameters.AddWithValue("@osmanlıca", nokta.Osmanlıca_İsim);
+            komut.Parameters.AddWithValue("@tür", nokta.Bölge_Türü);
+            komut.Parameters.AddWithValue("@üst_bölge", nokta.Üst_Bölge);
+            komut.Parameters.AddWithValue("@kimlik", nokta.Kimlik);
+
+            komut.ExecuteNonQuery();
+            komut.Dispose();
+            başarılı = true;
+        }
+        catch
+        {}
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return başarılı;
+    }
+
     public static bool BölgeBilgileriniDeğis(string kimlik, string veri_sütunu, string yeni_veri)
     {
         string cs = Bağlantı.bağlantı_dizisi;

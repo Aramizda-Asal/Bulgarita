@@ -3,6 +3,7 @@ using bulgarita.Services;
 using Newtonsoft.Json;
 using bulgarita;
 using System.Net;
+using System.Text.Json.Nodes;
 
 namespace bulgarita.Controllers;
 
@@ -115,7 +116,7 @@ public class Harita : ControllerBase
     public IActionResult NoktaEkle(
             [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
             [FromHeader(Name="OTURUM")] string OturumKimliği,
-            [FromBody] string gövde)
+            [FromBody] JsonObject gövde)
     {
         bool oturum_açık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
 
@@ -128,7 +129,7 @@ public class Harita : ControllerBase
             
             try
             {
-                Models.Harita gelen = JsonConvert.DeserializeObject<Models.Harita>(gövde);
+                Models.Harita gelen = JsonConvert.DeserializeObject<Models.Harita>(gövde.ToString());
                 Models.Harita yeni = Models.Harita.YeniNokta(
                     gelen.EnlemDrc,
                     gelen.BoylamDrc,
@@ -139,7 +140,7 @@ public class Harita : ControllerBase
                     gelen.Bölge_Türü,
                     gelen.Üst_Bölge
                 );
-
+                
                 if (yeni != null)
                 {
                     if (HaritaFonksiyonları.YeniBölgeKaydet(yeni))
@@ -159,6 +160,36 @@ public class Harita : ControllerBase
         {
             return new StatusCodeResult(403); // Forbidden
         }
+    }
+
+    [HttpPut("NoktaGüncelle")]
+    public IActionResult NoktaGüncelle(
+            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+            [FromHeader(Name="OTURUM")] string OturumKimliği,
+            [FromBody] JsonObject gövde)
+    {
+        Models.Harita nokta = JsonConvert.DeserializeObject<Models.Harita>(gövde.ToString());
+        if (OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği))
+        {
+            if (Request.ContentType != "application/json")
+            {
+                return new StatusCodeResult(400); // Bad Request
+            }
+            if(HaritaFonksiyonları.BölgeBilgileriniGüncelle(nokta))
+            {
+                return new StatusCodeResult(200); // OK
+            }
+            else
+            {
+                return new StatusCodeResult(400); // Bad Request
+            }
+            
+        }
+        else
+        {
+            return new StatusCodeResult(403); // Forbidden
+        }
+        
     }
 
     [HttpPatch("NoktaBilgisiGüncelle/{kimlik}/{veri_sütunu}/{yeni_veri}/{Düzenleyici_KullanıcıK}/{Düzenleyici_OturumK}")]
