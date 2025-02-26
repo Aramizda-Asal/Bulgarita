@@ -111,39 +111,6 @@ public class Harita : ControllerBase
         return yanıt;
     }
 
-    // Yakında kaldırılacak.
-    [HttpPost(
-    "NoktaKoy/{EnlemDrc}/{BoylamDrc}/{Bulgarca_Latin_İsim}/{Bulgarca_Kiril_İsim}/{Türkçe_İsim}/{Osmanlıca_İsim}/{Bölge_Türü}/{Üst_Bölge}/{Kimlik}/{Ekleyici_KullanıcıK}/{Ekleyici_OturumK}")]
-    public IActionResult NoktaKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
-                                  string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik,
-                                  string Ekleyici_KullanıcıK, string Ekleyici_OturumK)
-    {
-        Kimlik = Uri.UnescapeDataString(Kimlik);
-        Üst_Bölge = Uri.UnescapeDataString(Üst_Bölge);
-        Ekleyici_KullanıcıK = Uri.UnescapeDataString(Ekleyici_KullanıcıK);
-        Ekleyici_OturumK = Uri.UnescapeDataString(Ekleyici_OturumK);
-
-        Models.Roller rol_Ekleyici = new Models.Roller(Ekleyici_KullanıcıK, "Nokta Ekleyici");
-        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_Ekleyici);
-        bool OturumAçık = OturumVT.OturumAçık(Ekleyici_KullanıcıK, Ekleyici_OturumK);
-
-        if(YetkiVar && OturumAçık)
-        {
-            if(HaritaFonksiyonları.BölgeninBilgileriniKoy(EnlemDrc, BoylamDrc, Bulgarca_Latin_İsim, Bulgarca_Kiril_İsim, Türkçe_İsim, Osmanlıca_İsim, Bölge_Türü, Üst_Bölge, Kimlik))
-            {
-                return new StatusCodeResult(201); //Created
-            }
-            else
-            {
-                return new StatusCodeResult(422); //Unprocessable Content
-            }
-        }
-        else
-        {
-            return new StatusCodeResult(403); //Forbidden
-        }
-    }
-
     [HttpPut("NoktaEkle/")]
     public IActionResult NoktaEkle(
             [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,

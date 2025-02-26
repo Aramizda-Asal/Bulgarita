@@ -112,46 +112,6 @@ public static class HaritaFonksiyonları
         return BölgeListe;
     }
 
-    public static bool BölgeninBilgileriniKoy(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim, string Türkçe_İsim,
-                                                string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik)
-    {
-        string cs = Bağlantı.bağlantı_dizisi;
-
-        MySqlConnection bağlantı = new MySqlConnection(cs);
-        bağlantı.Open();
-
-        try
-        {
-            string kod = 
-            $"INSERT INTO {Bağlantı.Harita_Tablosu} VALUES (@Enlem, @Boylam, @BulgarcaL, @BulgarcaK, @Türkçe, @Osmanlıca, @BölgeTürü, @ÜstBölge, @Kimlik);";
-
-            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
-
-            komut.Parameters.AddWithValue("@Enlem",EnlemDrc);
-            komut.Parameters.AddWithValue("@Boylam",BoylamDrc);
-            komut.Parameters.AddWithValue("@BulgarcaL",Bulgarca_Latin_İsim);
-            komut.Parameters.AddWithValue("@BulgarcaK",Bulgarca_Kiril_İsim);
-            komut.Parameters.AddWithValue("@Türkçe",Türkçe_İsim);
-            komut.Parameters.AddWithValue("@Osmanlıca",Osmanlıca_İsim);
-            komut.Parameters.AddWithValue("@BölgeTürü",Bölge_Türü);
-            komut.Parameters.AddWithValue("@ÜstBölge",Üst_Bölge);
-            komut.Parameters.AddWithValue("@Kimlik",Kimlik);
-            
-            komut.ExecuteNonQuery();
-            komut.Dispose();
-
-            bağlantı.Close();
-            bağlantı.Dispose();
-            
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-
-    }
-
     public static bool YeniBölgeKaydet(Harita yeni)
     {
         if (yeni == null)

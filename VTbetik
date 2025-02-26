@@ -47,7 +47,9 @@ CREATE TABLE Harita (
         FOREIGN KEY (Üst_Bölge)
         REFERENCES Harita(Kimlik)
         ON DELETE RESTRICT
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT aynı_konum_kısıtı
+        UNIQUE (EnlemDrc, BoylamDrc, Bölge_Türü(50))
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
 
 CREATE TABLE Favoriler (
