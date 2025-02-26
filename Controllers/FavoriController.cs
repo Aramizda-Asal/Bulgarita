@@ -42,7 +42,7 @@ public class Favori : ControllerBase
         {
             if(FavorilerFonksiyonları.FavorilerdenCikar(Kullanıcı_Kimliği, body))
             {
-                return new StatusCodeResult(201); //Created
+                return new StatusCodeResult(200); //Ok
             }
             else
             {
@@ -95,7 +95,7 @@ public class Favori : ControllerBase
             }
             else
             {
-                return new StatusCodeResult(400); //Bad Request
+                return new StatusCodeResult(404); //Not Found
             }
         }
         else
