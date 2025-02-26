@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using MySql.Data.MySqlClient;
 using EmailValidation;
 using System.Net;
+using System.Collections.Specialized;
+using System.Collections;
 
 namespace bulgarita.Services;
 
@@ -475,5 +477,68 @@ public static class KullanıcıFonksiyonları
         }
         
         return çıktı;
+    }
+
+    public static List<string> İçerenKullanıcıAdlarıAl(string içerik)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+
+        string kod_işlem1 = $"SELECT COUNT(Kullanıcı_Adı) FROM {Bağlantı.Kullanıcı_Tablosu}";
+        kod_işlem1 += " WHERE Kullanıcı_Adı LIKE @içerik;";
+
+        MySqlCommand komut = new MySqlCommand(kod_işlem1, bağlantı);
+        string içerikString_tümü = "%" + içerik + "%";
+        komut.Parameters.AddWithValue("@içerik", içerikString_tümü);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+        komut.Dispose();
+
+        if(sonuc < 1)
+        {
+            return null;
+        }
+        /*--------------------------------------------------------*/
+        List<string> kullanıcılar = [];
+
+        string kod_işlem2 = $"SELECT Kullanıcı_Adı, Kimlik FROM {Bağlantı.Kullanıcı_Tablosu}" +
+        " WHERE Kullanıcı_Adı LIKE @içerik_aynı UNION DISTINCT " +
+
+        $"SELECT Kullanıcı_Adı, Kimlik FROM {Bağlantı.Kullanıcı_Tablosu}" +
+        " WHERE Kullanıcı_Adı LIKE @içerik_başta UNION DISTINCT "+
+
+        $"SELECT Kullanıcı_Adı, Kimlik FROM {Bağlantı.Kullanıcı_Tablosu}" +
+        " WHERE Kullanıcı_Adı LIKE @içerik_ortada UNION DISTINCT " +
+
+        $"SELECT Kullanıcı_Adı, Kimlik FROM {Bağlantı.Kullanıcı_Tablosu}" +
+        " WHERE Kullanıcı_Adı LIKE @içerik_sonda;";
+
+        komut = new MySqlCommand(kod_işlem2, bağlantı);
+        string içerikString_Aynı = içerik;
+        string içerikString_Başta = içerik + "_%";
+        string içerikString_Ortada = "%_" + içerik + "_%";
+        string içerikString_Sonda = "%_" + içerik;
+        komut.Parameters.AddWithValue("@içerik_aynı",içerikString_Aynı);
+        komut.Parameters.AddWithValue("@içerik_başta",içerikString_Başta);
+        komut.Parameters.AddWithValue("@içerik_ortada",içerikString_Ortada);
+        komut.Parameters.AddWithValue("@içerik_sonda",içerikString_Sonda);
+
+        MySqlDataReader okuyucu =  komut.ExecuteReader();
+        if (okuyucu.HasRows)
+        {
+            while(okuyucu.Read())
+            {
+                string kullanıcıAdı = okuyucu["Kullanıcı_Adı"].ToString();
+                kullanıcılar.Add(kullanıcıAdı);
+            }
+        }
+        
+        okuyucu.Close();        
+        komut.Dispose();
+
+        bağlantı.Close();
+        bağlantı.Dispose();
+      
+        return kullanıcılar;
     }
 }

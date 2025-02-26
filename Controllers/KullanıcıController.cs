@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
 using bulgarita.Models;
 using bulgarita;
+using System.Collections.Specialized;
+using Newtonsoft.Json;
 
 namespace bulgarita.Controllers;
 
@@ -142,6 +144,31 @@ public class Kullanıcı: ControllerBase
         else
         {
             return new StatusCodeResult(403); //Forbidden
+        }
+    }
+
+    [HttpGet("KullanıcıAra/{içerik}")]
+    public IActionResult KullanıcıAra(string içerik)
+    {
+        try
+        {
+            List<string> sonuç = KullanıcıFonksiyonları.İçerenKullanıcıAdlarıAl(içerik);
+
+            if(sonuç.Count < 1)
+            {
+                StatusCodeResult yanıt = new StatusCodeResult(204); //No Content
+            }
+
+            string json = JsonConvert.SerializeObject(sonuç);
+
+            JsonResult JSON_yanıt = new JsonResult(json);
+            JSON_yanıt.StatusCode = 200; //OK
+            return JSON_yanıt;
+        }
+        catch
+        {
+            StatusCodeResult yanıt = new StatusCodeResult(500); //Internal Server Error
+            return yanıt;
         }
     }
 }
