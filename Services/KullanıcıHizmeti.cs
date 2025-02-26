@@ -168,6 +168,15 @@ public static class KullanıcıFonksiyonları
         return kullanıcı;
     }
 
+    public static Models.Kullanıcı kullanıcıAl_KullanıcıAdı(string Kullanıcı_Adı)
+    {
+        MySqlConnection bağlantı = new MySqlConnection(Bağlantı.bağlantı_dizisi);
+        bağlantı.Open();
+        Models.Kullanıcı sonuç = kullanıcıAl_KullanıcıAdı_Açık(Kullanıcı_Adı, bağlantı);
+        bağlantı.Close(); bağlantı.Dispose();
+
+        return sonuç;
+    }
     public static Models.Kullanıcı kullanıcıAl_KullanıcıAdı_Açık(string Kullanıcı_Adı, MySqlConnection açık_bağlantı)
     {
         string kod = $"SELECT COUNT(kullanıcı_adı) from {Bağlantı.Kullanıcı_Tablosu} where kullanıcı_adı = @veri";
@@ -225,10 +234,6 @@ public static class KullanıcıFonksiyonları
             komut.ExecuteNonQuery();
 
             komut.Dispose();
-
-            //Diğer tablolardan silinmesi diğer hizmetler eklendiğinde eklenecektir.
-
-            FavorilerFonksiyonları.VeriGuncelle(kimlik, "Kullanıcı","anonim");
 
             bağlantı.Close();
             bağlantı.Dispose();
