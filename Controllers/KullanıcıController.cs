@@ -16,12 +16,10 @@ public class Kullanıcı: ControllerBase
     public IActionResult KullanıcıEkle(string Kullanıcı_Adı, string E_Posta, string Parola)
     {
         string Kimlik = KullanıcıFonksiyonları.Yeni_Kimlik();
-        Kullanıcı_tür Tür = Kullanıcı_tür.kullanıcı;
         Models.Kullanıcı kullanıcı = new Models.Kullanıcı(
                 Uri.UnescapeDataString(Kullanıcı_Adı),
                 Uri.UnescapeDataString(E_Posta),
                 Uri.UnescapeDataString(Parola),
-                Tür,
                 Kimlik );
 
         if(KullanıcıFonksiyonları.kullanıcıEkle(kullanıcı))

@@ -96,14 +96,13 @@ public static class KullanıcıFonksiyonları
             kullanıcı.Şifre = Parolalar.KarılmışParola(kullanıcı.Şifre, Parolalar.Tuz());
 
             string kod = 
-            $"INSERT INTO {Bağlantı.Kullanıcı_Tablosu}(Kullanıcı_Adı, E_posta, Parola, Tür, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Tür, @Kimlik);";
+            $"INSERT INTO {Bağlantı.Kullanıcı_Tablosu}(Kullanıcı_Adı, E_posta, Parola, Kimlik) VALUES(@kullanıcıadı, @E_Posta, @Parola, @Kimlik);";
 
             MySqlCommand komut = new MySqlCommand(kod, bağlantı);
 
             komut.Parameters.AddWithValue("@kullanıcıadı", kullanıcı.Adı);
             komut.Parameters.AddWithValue("@E_Posta", kullanıcı.E_posta);
             komut.Parameters.AddWithValue("@Parola", kullanıcı.Şifre);
-            komut.Parameters.AddWithValue("@Tür", kullanıcı.Tür.ToString());
             komut.Parameters.AddWithValue("@Kimlik", kullanıcı.Kimlik);
 
             komut.ExecuteNonQuery();
@@ -131,8 +130,6 @@ public static class KullanıcıFonksiyonları
     }
     public static Models.Kullanıcı kullanıcıAl_Kimlik_Açık(string Kimlik, MySqlConnection açık_bağlantı)
     {
-        Kullanıcı_tür tür;
-
         string kod = $"SELECT COUNT(Kimlik) FROM {Bağlantı.Kullanıcı_Tablosu} WHERE Kimlik = @kimlik;";
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
         komut.Parameters.AddWithValue("@kimlik", Kimlik);
@@ -160,8 +157,6 @@ public static class KullanıcıFonksiyonları
                 kullanıcı.Adı = okuyucu["Kullanıcı_Adı"].ToString();
                 kullanıcı.E_posta = okuyucu["E_posta"].ToString();
                 kullanıcı.Şifre = okuyucu["Parola"].ToString();
-                Enum.TryParse<Kullanıcı_tür>(okuyucu["Tür"].ToString(), out tür);
-                kullanıcı.Tür = tür;
                 kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
                 break;
             }
@@ -175,8 +170,6 @@ public static class KullanıcıFonksiyonları
 
     public static Models.Kullanıcı kullanıcıAl_KullanıcıAdı_Açık(string Kullanıcı_Adı, MySqlConnection açık_bağlantı)
     {
-        Kullanıcı_tür tür;
-
         string kod = $"SELECT COUNT(kullanıcı_adı) from {Bağlantı.Kullanıcı_Tablosu} where kullanıcı_adı = @veri";
 
         MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
@@ -207,8 +200,6 @@ public static class KullanıcıFonksiyonları
             kullanıcı.Adı = okuyucu["Kullanıcı_Adı"].ToString();
             kullanıcı.E_posta = okuyucu["E_posta"].ToString();
             kullanıcı.Şifre = okuyucu["Parola"].ToString();
-            Enum.TryParse<Kullanıcı_tür>(okuyucu["Tür"].ToString(), out tür);
-            kullanıcı.Tür = tür;
             kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
         }
 
