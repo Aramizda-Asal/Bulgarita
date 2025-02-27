@@ -88,23 +88,26 @@ public static class HaritaFonksiyonları
 
         while(okuyucu.Read())
         {
-            if(okuyucu.IsDBNull("Üst_Bölge"))
+            try
+            {
+                double EnlemDrc = double.Parse(okuyucu["EnlemDrc"].ToString());
+                double BoylamDrc = double.Parse(okuyucu["BoylamDrc"].ToString());
+                string Bulgarca_Latin_İsim = okuyucu["Bulgarca_Latin_İsim"].ToString();
+                string Bulgarca_Kiril_İsim = okuyucu["Bulgarca_Kiril_İsim"].ToString();
+                string Türkçe_İsim = okuyucu["Türkçe_İsim"].ToString();
+                string Osmanlıca_İsim = okuyucu["Osmanlıca_İsim"].ToString();
+                string Bölge_Türü = okuyucu["Bölge_Türü"].ToString();
+                string Üst_Bölge = okuyucu["Üst_Bölge"].ToString();
+                string Kimlik = okuyucu["Kimlik"].ToString();
+
+                Harita bölge = 
+                new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik);
+                BölgeListe.Add(bölge);
+            }
+            catch
             {
                 continue;
             }
-            double EnlemDrc = okuyucu.GetDouble("EnlemDrc");
-            double BoylamDrc = okuyucu.GetDouble("BoylamDrc");
-            string Bulgarca_Latin_İsim = okuyucu.GetString("Bulgarca_Latin_İsim");
-            string Bulgarca_Kiril_İsim = okuyucu.GetString("Bulgarca_Kiril_İsim");
-            string Türkçe_İsim = okuyucu.GetString("Türkçe_İsim");
-            string Osmanlıca_İsim = okuyucu.GetString("Osmanlıca_İsim");
-            string Bölge_Türü = okuyucu.GetString("Bölge_Türü");
-            string Üst_Bölge = okuyucu.GetString("Üst_Bölge");
-            string Kimlik = okuyucu.GetString("Kimlik");
-
-            Harita bölge = 
-            new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik);
-            BölgeListe.Add(bölge);
         }
 
         okuyucu.Close();
