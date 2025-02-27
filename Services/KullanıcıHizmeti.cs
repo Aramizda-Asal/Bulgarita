@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using MySql.Data.MySqlClient;
 using EmailValidation;
 using System.Net;
-using System.Collections.Specialized;
 using System.Collections;
 
 namespace bulgarita.Services;
@@ -86,6 +85,11 @@ public static class KullanıcıFonksiyonları
 
     public static bool kullanıcıEkle(Models.Kullanıcı kullanıcı)
     {
+        if (!EmailValidator.Validate(kullanıcı.E_posta, true, true))
+        {
+            return false;
+        }
+
         string cs = Bağlantı.bağlantı_dizisi;
 
         MySqlConnection bağlantı = new MySqlConnection(cs);
