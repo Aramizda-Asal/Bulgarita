@@ -152,9 +152,10 @@ public class Kullanıcı: ControllerBase
         {
             List<string> sonuç = KullanıcıFonksiyonları.İçerenKullanıcıAdlarıAl(içerik);
 
-            if(sonuç.Count < 1)
+            if(sonuç == null || sonuç.Count < 1)
             {
                 StatusCodeResult yanıt = new StatusCodeResult(204); //No Content
+                return yanıt;
             }
 
             string json = JsonConvert.SerializeObject(sonuç);
