@@ -30,13 +30,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_NoktaEkleyici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolVer_NoktaEkleyici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaEkleyici/{Kullanıcı_Adı}")]
+    public IActionResult RolVer_NoktaEkleyici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
@@ -44,7 +47,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Ekleyici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Ekleyici");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
@@ -61,13 +64,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_NoktaDüzenleyici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolVer_NoktaDüzenleyici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaDüzenleyici/{Kullanıcı_Adı}")]
+    public IActionResult RolVer_NoktaDüzenleyici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
@@ -75,7 +81,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Düzenleyici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Düzenleyici");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
@@ -92,14 +98,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_NoktaSilici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolVer_NoktaSilici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
+    [HttpPost("RolVer_NoktaSilici/{Kullanıcı_Adı}")]
+    public IActionResult RolVer_NoktaSilici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
-        Console.WriteLine("çağırıldım");
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
@@ -108,7 +116,7 @@ public class Roller : ControllerBase
         if(YetkiVar && OturumAçık)
         {
             Console.WriteLine("yetki var, oturum açık");
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Silici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Silici");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
@@ -128,13 +136,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}")]
-    public IActionResult RolVer_RolAtayıcıAlıcı(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
+    [HttpPost("RolVer_RolAtayıcıAlıcı/{Kullanıcı_Adı}")]
+    public IActionResult RolVer_RolAtayıcıAlıcı(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
@@ -142,7 +153,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Rol Atayıcı/Alıcı");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Rol Atayıcı/Alıcı");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
@@ -159,13 +170,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpPost("RolVer_KullanıcıSilici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolVer_KullanıcıSilici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
+    [HttpPost("RolVer_KullanıcıSilici/{Kullanıcı_Adı}")]
+    public IActionResult RolVer_KullanıcıSilici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolVerici_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolVerici_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolVerici_KullanıcıK = Uri.UnescapeDataString(RolVerici_KullanıcıK);
         RolVerici_OturumK = Uri.UnescapeDataString(RolVerici_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolVerici = new Models.Roller(RolVerici_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolVerici);
@@ -173,7 +187,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Kullanıcı Silici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Kullanıcı Silici");
 
             if(RollerFonksiyonları.RolVer(roller))
             {
@@ -190,21 +204,24 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaEkleyici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolAl_NoktaEkleyici(string Kullanıcı_Kimliği, 
-            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaEkleyici/{Kullanıcı_Adı}")]
+    public IActionResult RolAl_NoktaEkleyici(string Kullanıcı_Adı, 
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
 
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
+   
         Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
         bool OturumAçık = OturumVT.OturumAçık(RolAlıcı_KullanıcıK, RolAlıcı_OturumK);
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Ekleyici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Ekleyici");
 
             if(RollerFonksiyonları.RolAl(roller))
             {
@@ -221,13 +238,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaDüzenleyici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolAl_NoktaDüzenleyici(string Kullanıcı_Kimliği, 
-            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaDüzenleyici/{Kullanıcı_Adı}")]
+    public IActionResult RolAl_NoktaDüzenleyici(string Kullanıcı_Adı, 
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
@@ -235,7 +255,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Düzenleyici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Düzenleyici");
 
             if(RollerFonksiyonları.RolAl(roller))
             {
@@ -252,13 +272,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_NoktaSilici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolAl_NoktaSilici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_NoktaSilici/{Kullanıcı_Adı}")]
+    public IActionResult RolAl_NoktaSilici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
@@ -266,7 +289,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Nokta Silici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Nokta Silici");
 
             if(RollerFonksiyonları.RolAl(roller))
             {
@@ -283,13 +306,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_RolAtayıcıAlıcı/{Kullanıcı_Kimliği}")]
-    public IActionResult RolAl_RolAtayıcıAlıcı(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_RolAtayıcıAlıcı/{Kullanıcı_Adı}")]
+    public IActionResult RolAl_RolAtayıcıAlıcı(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK, 
+            [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
@@ -297,7 +323,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Rol Atayıcı/Alıcı");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Rol Atayıcı/Alıcı");
 
             if(RollerFonksiyonları.RolAl(roller))
             {
@@ -314,13 +340,16 @@ public class Roller : ControllerBase
         }
     }
 
-    [HttpDelete("RolAl_KullanıcıSilici/{Kullanıcı_Kimliği}")]
-    public IActionResult RolAl_KullanıcıSilici(string Kullanıcı_Kimliği,
-            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK,[FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
+    [HttpDelete("RolAl_KullanıcıSilici/{Kullanıcı_Adı}")]
+    public IActionResult RolAl_KullanıcıSilici(string Kullanıcı_Adı,
+            [FromHeader(Name="KULLANICI")] string RolAlıcı_KullanıcıK,
+            [FromHeader(Name="OTURUM")] string RolAlıcı_OturumK)
     {
-        Kullanıcı_Kimliği = Uri.UnescapeDataString(Kullanıcı_Kimliği);
         RolAlıcı_KullanıcıK = Uri.UnescapeDataString(RolAlıcı_KullanıcıK);
         RolAlıcı_OturumK = Uri.UnescapeDataString(RolAlıcı_OturumK);
+
+        Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+        Models.Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
         Models.Roller rol_RolAlıcı = new Models.Roller(RolAlıcı_KullanıcıK, "Rol Atayıcı/Alıcı");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_RolAlıcı);
@@ -328,7 +357,7 @@ public class Roller : ControllerBase
 
         if(YetkiVar && OturumAçık)
         {
-            Models.Roller roller = new Models.Roller(Kullanıcı_Kimliği, "Kullanıcı Silici");
+            Models.Roller roller = new Models.Roller(kullanıcı.Kimlik, "Kullanıcı Silici");
 
             if(RollerFonksiyonları.RolAl(roller))
             {
@@ -555,7 +584,7 @@ public class Roller : ControllerBase
     * </para>
     * </remarks>
     *
-    * <param name="KullanıcıKimliği">Rolleri getirilecek kullanıcının kimliği</param>
+    * <param name="Kullanıcı_Adı">Rolleri getirilecek kullanıcının adı</param>
     *
     * <returns>
     * Seçili kullanıcının sahip olduğu rolleri
@@ -563,13 +592,15 @@ public class Roller : ControllerBase
     */
     [HttpGet("KullanıcınınRolleri")]
     public IActionResult KullanıcınınRolleri(
-            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği)
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Adı)
     {
         try
         {
             List<string> sahipOlunanRoller = [];
+            Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+
             Models.Kullanıcı kullanıcı = 
-                KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+                KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
             if(RollerFonksiyonları.NoktaEkleyebilir(kullanıcı))
             {
@@ -629,8 +660,8 @@ public class Roller : ControllerBase
     * </para>
     * </remarks>
     *
-    * <param name="KullanıcıKimliği">Sahip olmadığı rolleri getirilecek 
-    * kullanıcının kimliği</param>
+    * <param name="Kullanıcı_Adı">Sahip olmadığı rolleri getirilecek 
+    * kullanıcının adı</param>
     *
     * <returns>
     * Seçili kullanıcının sahip olmadığı rolleri
@@ -638,13 +669,15 @@ public class Roller : ControllerBase
     */
     [HttpGet("KullanıcınınRolleriDeğil")]
     public IActionResult KullanıcınınRolleriDeğil(
-            [FromHeader(Name="KULLANICI")] string KullanıcıKimliği)
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Adı)
     {
         try
         {
             List<string> sahipOlunmayanRoller = [];
+            Kullanıcı_Adı = Uri.UnescapeDataString(Kullanıcı_Adı);
+
             Models.Kullanıcı kullanıcı = 
-                KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+                KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(Kullanıcı_Adı);
 
             if(!RollerFonksiyonları.NoktaEkleyebilir(kullanıcı))
             {
