@@ -1,4 +1,4 @@
-using System.Reflection.Metadata;
+// Copyright (C) 2025 Güneş Balcı, Habil Tataroğulları, Yusuf Kozan
 
 namespace bulgarita.Models;
 

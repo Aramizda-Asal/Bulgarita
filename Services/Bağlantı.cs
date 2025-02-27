@@ -1,3 +1,5 @@
+// Copyright (C) 2025 Güneş Balcı, Habil Tataroğulları, Yusuf Kozan
+
 using System;
 using System.IO;
 using MySql.Data.MySqlClient;

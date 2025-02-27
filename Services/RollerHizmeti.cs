@@ -1,3 +1,5 @@
+// Copyright (C) 2025 Güneş Balcı, Habil Tataroğulları, Yusuf Kozan
+
 using bulgarita.Models;
 using bulgarita;
 using MySql.Data.MySqlClient;

@@ -1,6 +1,0 @@
-@bulgarita_HostAddress = http://localhost:5130
-
-GET {{bulgarita_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

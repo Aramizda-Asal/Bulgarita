@@ -1,3 +1,5 @@
+// Copyright (C) 2025 Güneş Balcı, Habil Tataroğulları, Yusuf Kozan
+
 using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
 using bulgarita.Models;
