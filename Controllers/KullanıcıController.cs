@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using bulgarita.Services;
 using bulgarita.Models;
 using bulgarita;
-using System.Collections.Specialized;
 using Newtonsoft.Json;
+using System.Text.Json.Nodes;
 
 namespace bulgarita.Controllers;
 
@@ -117,20 +117,20 @@ public class Kullanıcı: ControllerBase
         }
     }
 
-    [HttpDelete("KullanıcıSil/{kimlik}/{Silici_KullanıcıK}/{Silici_OturumK}")]
-    public IActionResult KullanıcıSil(string kimlik, string Silici_KullanıcıK, string Silici_OturumK)
+    [HttpDelete("KullanıcıSil")]
+    public IActionResult KullanıcıSil(
+            [FromHeader(Name="KULLANICI")] string Kullanıcı_Kimliği,
+            [FromHeader(Name="OTURUM")] string Oturum_Kimliği,
+            [FromBody] string body)
     {
-        kimlik = Uri.UnescapeDataString(kimlik);
-        Silici_KullanıcıK = Uri.UnescapeDataString(Silici_KullanıcıK);
-        Silici_OturumK = Uri.UnescapeDataString(Silici_OturumK);
-
-        Models.Roller rol_KullanıcıSilici = new Models.Roller(Silici_KullanıcıK, "Kullanıcı Silici");
+        Models.Kullanıcı silinecek_kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı(body);
+        Models.Roller rol_KullanıcıSilici = new Models.Roller(Kullanıcı_Kimliği, "Kullanıcı Silici");
         bool YetkiVar = RollerFonksiyonları.SatırVar(rol_KullanıcıSilici);
-        bool OturumAçık = OturumVT.OturumAçık(Silici_KullanıcıK, Silici_OturumK);
+        bool OturumAçık = OturumVT.OturumAçık(Kullanıcı_Kimliği, Oturum_Kimliği);
 
         if(YetkiVar && OturumAçık)
         {
-            if(KullanıcıFonksiyonları.KullanıcıSil(kimlik))
+            if(KullanıcıFonksiyonları.KullanıcıSil(silinecek_kullanıcı.Kimlik))
             {
                 return new StatusCodeResult(200); //OK
             }
