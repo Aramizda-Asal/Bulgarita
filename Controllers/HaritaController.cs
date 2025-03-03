@@ -171,6 +171,10 @@ public class Harita : ControllerBase
             [FromBody] JsonObject gövde)
     {
         Models.Harita nokta = JsonConvert.DeserializeObject<Models.Harita>(gövde.ToString());
+        if (String.IsNullOrWhiteSpace(nokta.Üst_Bölge))
+        {
+            nokta.Üst_Bölge = null;
+        }
         if (OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği))
         {
             if (Request.ContentType != "application/json")
@@ -183,7 +187,7 @@ public class Harita : ControllerBase
             }
             else
             {
-                return new StatusCodeResult(400); // Bad Request
+                return new StatusCodeResult(500); // Internal Server Error
             }
             
         }
