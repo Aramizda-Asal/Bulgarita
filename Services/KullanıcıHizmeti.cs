@@ -225,6 +225,48 @@ public static class KullanıcıFonksiyonları
         return kullanıcı;
     }
     
+    public static Models.Kullanıcı kullanıcıAl_Eposta_Açık(string E_Posta, MySqlConnection açık_bağlantı)
+    {
+        string kod = $"SELECT COUNT(E_Posta) from {Bağlantı.Kullanıcı_Tablosu} where E_Posta = @veri";
+
+        MySqlCommand komut = new MySqlCommand(kod, açık_bağlantı);
+
+        komut.Parameters.AddWithValue("@veri", E_Posta);
+
+        int sonuc = int.Parse(komut.ExecuteScalar().ToString());
+
+        if(sonuc < 1)
+        {   
+            komut.Dispose();
+            return null;
+        }
+
+        kod = $"SELECT * FROM {Bağlantı.Kullanıcı_Tablosu} WHERE E_Posta = @veri";
+
+        komut.Dispose();
+
+        komut = new MySqlCommand(kod, açık_bağlantı);
+
+        komut.Parameters.AddWithValue("@veri",E_Posta);
+        Models.Kullanıcı kullanıcı = new Models.Kullanıcı();
+
+        MySqlDataReader okuyucu =  komut.ExecuteReader();
+
+        while(okuyucu.Read())
+        {
+            kullanıcı.Adı = okuyucu["Kullanıcı_Adı"].ToString();
+            kullanıcı.E_posta = okuyucu["E_posta"].ToString();
+            kullanıcı.Şifre = okuyucu["Parola"].ToString();
+            kullanıcı.Kimlik = okuyucu["Kimlik"].ToString();
+        }
+
+        okuyucu.Close();
+        
+        komut.Dispose();
+
+        return kullanıcı;
+    }
+    
     public static bool KullanıcıSil(string kimlik)
     {
         try

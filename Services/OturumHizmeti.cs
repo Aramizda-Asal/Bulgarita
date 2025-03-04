@@ -4,6 +4,7 @@ using System;
 using System.Text;
 using bulgarita.Models;
 using MySql.Data.MySqlClient;
+using EmailValidation;
 
 namespace bulgarita.Services;
 
@@ -16,7 +17,15 @@ public static class OturumFonksiyonları
 
         if (KullanıcıFonksiyonları.GirişBilgileriDoğru(kullanıcı_adı, parola, bağlantı))
         {
-            Kullanıcı kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı_Açık(kullanıcı_adı, bağlantı);
+            Kullanıcı kullanıcı;
+            if(EmailValidator.Validate(kullanıcı_adı, true, true))
+            {
+                kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_Eposta_Açık(kullanıcı_adı, bağlantı);
+            }
+            else
+            {
+                kullanıcı = KullanıcıFonksiyonları.kullanıcıAl_KullanıcıAdı_Açık(kullanıcı_adı, bağlantı);
+            }
 
             Oturum yeni_oturum = new Oturum(kullanıcı, 8);
             if (OturumVT.OturumKaydet(yeni_oturum, bağlantı))
