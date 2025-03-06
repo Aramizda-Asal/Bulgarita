@@ -198,35 +198,6 @@ public class Harita : ControllerBase
         
     }
 
-    [HttpPatch("NoktaBilgisiGüncelle/{kimlik}/{veri_sütunu}/{yeni_veri}/{Düzenleyici_KullanıcıK}/{Düzenleyici_OturumK}")]
-    public IActionResult NoktaBilgisiGüncelle(string kimlik, string veri_sütunu, string yeni_veri, string Düzenleyici_KullanıcıK, string Düzenleyici_OturumK)
-    {
-        kimlik = Uri.UnescapeDataString(kimlik);
-        yeni_veri = Uri.UnescapeDataString(yeni_veri);
-        Düzenleyici_KullanıcıK = Uri.UnescapeDataString(Düzenleyici_KullanıcıK);
-        Düzenleyici_OturumK = Uri.UnescapeDataString(Düzenleyici_OturumK);
-
-        Models.Roller rol_Düzenleyici = new Models.Roller(Düzenleyici_KullanıcıK, "Nokta Düzenleyici");
-        bool YetkiVar = RollerFonksiyonları.SatırVar(rol_Düzenleyici);
-        bool OturumAçık = OturumVT.OturumAçık(Düzenleyici_KullanıcıK, Düzenleyici_OturumK);
-
-        if(YetkiVar && OturumAçık)
-        {
-            if(HaritaFonksiyonları.BölgeBilgileriniDeğis(kimlik, veri_sütunu, yeni_veri))
-            {
-                return new StatusCodeResult(200); //OK
-            }
-            else
-            {
-                return new StatusCodeResult(422); //Unprocessable Content
-            }
-        }
-        else
-        {
-            return new StatusCodeResult(403); //Forbidden
-        }
-    }
-
     [HttpDelete("NoktaSil")]
     public IActionResult NoktaSil(
         [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,

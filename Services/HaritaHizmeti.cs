@@ -63,6 +63,8 @@ public static class HaritaFonksiyonları
 
         okuyucu.Close();
         komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
 
         return sonuçlar;
     }
@@ -113,6 +115,8 @@ public static class HaritaFonksiyonları
         okuyucu.Close();
         
         komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
 
         return BölgeListe;
     }
@@ -200,34 +204,6 @@ public static class HaritaFonksiyonları
         bağlantı.Dispose();
 
         return başarılı;
-    }
-
-    public static bool BölgeBilgileriniDeğis(string kimlik, string veri_sütunu, string yeni_veri)
-    {
-        string cs = Bağlantı.bağlantı_dizisi;
-
-        MySqlConnection bağlantı = new MySqlConnection(cs);
-        bağlantı.Open();
-
-        try 
-        {
-            string kod = $"Update {Bağlantı.Harita_Tablosu} SET {veri_sütunu} = @yeni_veri WHERE Kimlik = @kimlik";
-
-            MySqlCommand komut = new MySqlCommand(kod, bağlantı);
-
-            komut.Parameters.AddWithValue("@yeni_veri", yeni_veri);
-            komut.Parameters.AddWithValue("@kimlik", kimlik);
-
-            komut.ExecuteNonQuery();
-            komut.Dispose();
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-
     }
 
     /**
