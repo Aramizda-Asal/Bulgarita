@@ -61,6 +61,7 @@ CREATE TABLE Harita (
     Bölge_Türü TEXT NOT NULL,
     Üst_Bölge CHAR(32),
     Kimlik CHAR(32) NOT NULL PRIMARY KEY,
+    Aciklama TEXT,
     CONSTRAINT üst_bölge_kısıtı
         FOREIGN KEY (Üst_Bölge)
         REFERENCES Harita(Kimlik)

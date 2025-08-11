@@ -158,7 +158,8 @@ public class Harita : ControllerBase
                     gelen.Türkçe_İsim,
                     gelen.Osmanlıca_İsim,
                     gelen.Bölge_Türü,
-                    gelen.Üst_Bölge
+                    gelen.Üst_Bölge,
+                    gelen.Aciklama
                 );
                 
                 if (yeni != null)

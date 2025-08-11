@@ -46,16 +46,16 @@ public static class HaritaFonksiyonları
         MySqlConnection bağlantı = new MySqlConnection(cs);
         bağlantı.Open();
 
-        string kod = 
+        string kod =
         $"SELECT * FROM {Bağlantı.Harita_Tablosu} WHERE Bölge_Türü = @bölge_türü;";
 
         MySqlCommand komut = new MySqlCommand(kod, bağlantı);
         komut.Parameters.AddWithValue("@bölge_türü", bölge_türü);
-        
-        MySqlDataReader okuyucu =  komut.ExecuteReader();
+
+        MySqlDataReader okuyucu = komut.ExecuteReader();
         List<Harita> sonuçlar = new List<Harita>();
 
-        while(okuyucu.Read())
+        while (okuyucu.Read())
         {
             try
             {
@@ -68,7 +68,8 @@ public static class HaritaFonksiyonları
                     okuyucu["Osmanlıca_İsim"].ToString(),
                     okuyucu["Bölge_Türü"].ToString(),
                     okuyucu["Üst_Bölge"].ToString(),
-                    okuyucu["Kimlik"].ToString()
+                    okuyucu["Kimlik"].ToString(),
+                    okuyucu["Aciklama"].ToString()
                 );
                 sonuçlar.Add(bölge);
             }
@@ -119,9 +120,10 @@ public static class HaritaFonksiyonları
                 string Bölge_Türü = okuyucu["Bölge_Türü"].ToString();
                 string Üst_Bölge = okuyucu["Üst_Bölge"].ToString();
                 string Kimlik = okuyucu["Kimlik"].ToString();
+                string Aciklama = okuyucu["Aciklama"].ToString();
 
                 Harita bölge = 
-                new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik);
+                new Harita(EnlemDrc,BoylamDrc,Bulgarca_Latin_İsim,Bulgarca_Kiril_İsim,Türkçe_İsim,Osmanlıca_İsim,Bölge_Türü,Üst_Bölge,Kimlik,Aciklama);
                 BölgeListe.Add(bölge);
             }
             catch

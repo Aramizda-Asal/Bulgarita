@@ -54,6 +54,9 @@ public class Harita
     [JsonProperty("kimlik")]
     public string Kimlik;
 
+    [JsonProperty("aciklama")]
+    public string Aciklama;
+
     [JsonIgnore]
     public static readonly string[][] UygunTürler = new string[][] {
         new string[] {"Ülke"},
@@ -64,7 +67,7 @@ public class Harita
 
     public Harita() {}
     public Harita(double EnlemDrc, double BoylamDrc, string Bulgarca_Latin_İsim, string Bulgarca_Kiril_İsim,
-    string Türkçe_İsim, string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik)
+    string Türkçe_İsim, string Osmanlıca_İsim, string Bölge_Türü, string Üst_Bölge, string Kimlik, string Aciklama)
     {
         this.EnlemDrc = EnlemDrc;
         this.BoylamDrc = BoylamDrc;
@@ -75,6 +78,7 @@ public class Harita
         this.Bölge_Türü = Bölge_Türü;
         this.Üst_Bölge = Üst_Bölge;
         this.Kimlik = Kimlik;
+        this.Aciklama = Aciklama;
     }
     public Harita(string harita)
     {
@@ -88,6 +92,7 @@ public class Harita
         this.Bölge_Türü = haritaStringArray[6];
         this.Üst_Bölge = haritaStringArray[7];
         this.Kimlik = haritaStringArray[8];
+        this.Aciklama = haritaStringArray[9];
     }
 
     /**
@@ -98,7 +103,7 @@ public class Harita
     public static Harita YeniNokta(double EnlemDrc, double BoylamDrc,
             string BulgarcaLatinİsim, string BulgarcaKirilİsim,
             string Türkçeİsim, string Osmanlıcaİsim, string BölgeTürü,
-            string ÜstBölge)
+            string ÜstBölge, string Aciklama)
     {
         // Ekvatordan 90 dereceden fazla uzaklaşılamaz.
         if (EnlemDrc > 90 || EnlemDrc < -90)
@@ -128,7 +133,8 @@ public class Harita
             Osmanlıcaİsim,
             BölgeTürü,
             ÜstBölge,
-            kimlik
+            kimlik,
+            Aciklama
         );
 
         return yeni_nokta;
@@ -182,6 +188,7 @@ public class Harita
             this.Bölge_Türü,
             this.Üst_Bölge,
             this.Kimlik,
+            this.Aciklama,
         ];
         return çıktı;
     }
