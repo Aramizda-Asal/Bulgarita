@@ -199,7 +199,7 @@ public static class HaritaFonksiyonları
             string kod = $"UPDATE {Bağlantı.Harita_Tablosu} SET " +
                     "EnlemDrc = @enlem, BoylamDrc = @boylam, Bulgarca_Latin_İsim = @bulgarca_latin, " +
                     "Bulgarca_Kiril_İsim = @bulgarca_kiril, Türkçe_İsim = @türkçe, Osmanlıca_İsim = @osmanlıca, " +
-                    "Bölge_Türü = @tür, Üst_Bölge = @üst_bölge, Kimlik = @kimlik " +
+                    "Bölge_Türü = @tür, Üst_Bölge = @üst_bölge, Kimlik = @kimlik, Aciklama = @aciklama " +
                     "WHERE Kimlik = @kimlik;"; 
         
             MySqlCommand komut = new MySqlCommand(kod, bağlantı);
@@ -212,6 +212,7 @@ public static class HaritaFonksiyonları
             komut.Parameters.AddWithValue("@tür", nokta.Bölge_Türü);
             komut.Parameters.AddWithValue("@üst_bölge", nokta.Üst_Bölge);
             komut.Parameters.AddWithValue("@kimlik", nokta.Kimlik);
+            komut.Parameters.AddWithValue("@aciklama", nokta.Aciklama);
 
             komut.ExecuteNonQuery();
             komut.Dispose();
