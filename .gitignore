@@ -3,3 +3,4 @@ bin/
 obj/
 VT*.txt
 *.sln
+Ayarlar/posta.json

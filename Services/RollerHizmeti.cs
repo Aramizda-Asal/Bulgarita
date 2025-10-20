@@ -120,6 +120,39 @@ public static class RollerFonksiyonları
         return SatırVar(aranan);
     }
 
+    public static List<Models.Kullanıcı> NoktaDüzenleyiciler()
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        string kod = $"SELECT k.* FROM {Bağlantı.Kullanıcı_Tablosu} k " +
+            $"INNER JOIN {Bağlantı.Roller_Tablosu} r ON r.Kullanıcı = k.Kimlik " +
+            "WHERE Rol = \"Nokta Düzenleyici\"";
+
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        MySqlDataReader okuyucu = komut.ExecuteReader();
+
+        List<Models.Kullanıcı> sonuç = new List<Models.Kullanıcı>();
+        while (okuyucu.Read())
+        {
+            Kullanıcı yeni = new Kullanıcı(
+                okuyucu["Kullanıcı_Adı"].ToString(),
+                okuyucu["E_Posta"].ToString(),
+                okuyucu["Parola"].ToString(),
+                okuyucu["Kimlik"].ToString()
+            );
+            sonuç.Add(yeni);
+        }
+        okuyucu.Close();
+        komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return sonuç;
+    }
+
     /**
     * <summary>
     * Belirtilen kullanıcının nokta silme yetkisi olup olmadığını denetler.

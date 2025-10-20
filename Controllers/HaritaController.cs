@@ -24,6 +24,8 @@ using Newtonsoft.Json;
 using bulgarita;
 using System.Net;
 using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace bulgarita.Controllers;
 
@@ -243,5 +245,59 @@ public class Harita : ControllerBase
         {
             return new StatusCodeResult(403); //Forbidden
         }
+    }
+
+    [HttpPost("NoktaGeriBildirimi/")]
+    public IActionResult NoktaGeriBildirimi(
+        [FromHeader(Name="KULLANICI")] string KullanıcıKimliği,
+        [FromHeader(Name="OTURUM")] string OturumKimliği,
+        [FromBody] JsonObject token
+    )
+    {
+        bool OturumAçık = OturumVT.OturumAçık(KullanıcıKimliği, OturumKimliği);
+
+        if(OturumAçık)
+        {
+            string nokta_kimliği = token["Nokta"]?.ToString();
+            string geri_bildirim = token["Yorum"]?.ToString();
+
+            Models.Harita nokta = HaritaFonksiyonları.BölgeninBilgileriniAl(nokta_kimliği);
+
+            Models.Kullanıcı bildiren = KullanıcıFonksiyonları.kullanıcıAl_Kimlik(KullanıcıKimliği);
+            List<Models.Kullanıcı> alıcılar = RollerFonksiyonları.NoktaDüzenleyiciler();
+
+            StringBuilder içerik = new StringBuilder();
+            içerik.Append("Haritadaki bir nokta hakkında geri bildirim var.\n");
+            içerik.Append("Nokta Bilgileri:\n");
+            içerik.Append($"\tBölge Türü: {nokta.Bölge_Türü}\n");
+            içerik.Append($"\tBulgarca Latin: {nokta.Bulgarca_Latin_İsim}\n");
+            içerik.Append($"\tBulgarca Kiril: {nokta.Bulgarca_Kiril_İsim}\n");
+            içerik.Append($"\tTürkçe: {nokta.Türkçe_İsim}\n");
+            içerik.Append($"\tOsmanlıca: {nokta.Osmanlıca_İsim}\n");
+            içerik.Append($"\tKoordinatlar: {nokta.EnlemDrc}, {nokta.BoylamDrc}\n");
+            içerik.Append($"\tAçıklama: {nokta.Aciklama}\n");
+            içerik.Append($"\tKimlik: {nokta.Kimlik}\n");
+            içerik.Append("\n-----\n\n");
+            içerik.Append($"Geri Bildirim Yapan: {bildiren.Adı}\n");
+            içerik.Append($"E-Posta Adresi: {bildiren.E_posta}\n");
+            içerik.Append($"Bildirim Tarihi: {DateTime.UtcNow} UTC\n");
+            içerik.Append("\n-----\n\n");
+            içerik.Append("İleti:\n");
+            içerik.Append(geri_bildirim);
+
+            Console.WriteLine(içerik.ToString());
+
+            bool gönderildi = PostaFonksiyonları.EPostaGönder(
+                "Bulgaristan Yer Adları Geri Bildirimi",
+                içerik.ToString(),
+                alıcılar
+            );
+
+            if (gönderildi)
+                return new StatusCodeResult(200);
+            else
+                return new StatusCodeResult(500);
+        }
+        return new StatusCodeResult(403);
     }
 }

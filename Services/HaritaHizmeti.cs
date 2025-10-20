@@ -141,6 +141,54 @@ public static class HaritaFonksiyonları
         return BölgeListe;
     }
 
+    public static Harita BölgeninBilgileriniAl(string nokta_kimliği)
+    {
+        string cs = Bağlantı.bağlantı_dizisi;
+
+        MySqlConnection bağlantı = new MySqlConnection(cs);
+        bağlantı.Open();
+
+        string kod =
+        $"SELECT * FROM {Bağlantı.Harita_Tablosu} WHERE Kimlik = @kimlik;";
+
+        MySqlCommand komut = new MySqlCommand(kod, bağlantı);
+        komut.Parameters.AddWithValue("@kimlik", nokta_kimliği);
+
+        MySqlDataReader okuyucu = komut.ExecuteReader();
+        Harita sonuç = null;
+        List<Harita> sonuçlar = new List<Harita>();
+
+        if (okuyucu.Read())
+        {
+            try
+            {
+                sonuç = new Harita(
+                    double.Parse(okuyucu["EnlemDrc"].ToString()),
+                    double.Parse(okuyucu["BoylamDrc"].ToString()),
+                    okuyucu["Bulgarca_Latin_İsim"].ToString(),
+                    okuyucu["Bulgarca_Kiril_İsim"].ToString(),
+                    okuyucu["Türkçe_İsim"].ToString(),
+                    okuyucu["Osmanlıca_İsim"].ToString(),
+                    okuyucu["Bölge_Türü"].ToString(),
+                    okuyucu["Üst_Bölge"].ToString(),
+                    okuyucu["Kimlik"].ToString(),
+                    okuyucu["Aciklama"].ToString()
+                );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        okuyucu.Close();
+        komut.Dispose();
+        bağlantı.Close();
+        bağlantı.Dispose();
+
+        return sonuç;
+    }
+
     public static bool YeniBölgeKaydet(Harita yeni)
     {
         if (yeni == null)
