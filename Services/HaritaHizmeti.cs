@@ -205,7 +205,7 @@ public static class HaritaFonksiyonları
         {
             string kod = $"INSERT INTO {Bağlantı.Harita_Tablosu} VALUES ( " +
                 "@enlem, @boylam, @bulgarca_latin, @bulgarca_kiril, @türkçe, " +
-                "@osmanlıca, @tür, @üst_bölge, @kimlik);";
+                "@osmanlıca, @tür, @üst_bölge, @kimlik, @aciklama);";
             
             MySqlCommand komut = new MySqlCommand(kod, bağlantı);
             komut.Parameters.AddWithValue("@enlem", yeni.EnlemDrc);
@@ -217,6 +217,7 @@ public static class HaritaFonksiyonları
             komut.Parameters.AddWithValue("@tür", yeni.Bölge_Türü);
             komut.Parameters.AddWithValue("@üst_bölge", yeni.Üst_Bölge);
             komut.Parameters.AddWithValue("@kimlik", yeni.Kimlik);
+            komut.Parameters.AddWithValue("@aciklama", yeni.Aciklama);
 
             komut.ExecuteNonQuery();
             komut.Dispose();
