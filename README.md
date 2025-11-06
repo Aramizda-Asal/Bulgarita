@@ -1,6 +1,10 @@
 # Bulgarita Art Uç
 Bulgaristan’da Harita Bazlı Yer İsimleri Uygulaması: Türkçe - Bulgarca projesinin art uç kodları
 
+Ön uç için: [https://github.com/Aramizda-Asal/Bulgarita-Front](https://github.com/Aramizda-Asal/Bulgarita-Front)
+
+Bu çalışma, Yurtdışı Türkler ve Akraba Topluluklar Başkanlığı desteğiyle Kocaeli Balkan Türkleri Kültür ve Dayanışma Derneği ile Kocaeli Üniversitesi Yazılım Teknolojileri Araştırma Laboratuvarı iş birliğinde yapılan bir sosyal sorumluluk projesidir.
+
 ---
 
 *Copyright (C) 2025 Habil Tataroğulları, Güneş Balcı, Yusuf Kozan*
